@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Sidonie's Website</title>
+        <link href="css/styles.css" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="img/logo-i-blue.ico">
+        <script src="main.js"></script>
+        <script src="../components/footer.js" type="text/javascript" defer></script>
+        <script src="../components/header.js" type="text/javascript" defer></script>
+    </head>    
+    <body>
+        
+        <header>
+            <img src="img/logo-p-blue.png" alt="SidonieLogo" class="logo">
+            <nav>
+                <ul>
+                    <li><a href="http://www.sidonie.me">Home</a></li>
+                    <li><a href="recipes">Recipes</a></li>
+                    <li><a href="projects">Projects</a></li>
+                    <li><a href="contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="contact-page-hero">
+            <div class="container">
+                <h1 class="title">Contact</h1>
+            </div>
+        </section>
+
+        <section class="msg-form">
+            <form action="contactform.php">
+                <div class="form-row">
+                    <div class="input-field">
+                        <input type="text" required id="name" name="name">
+                        <div class="underline"></div>
+                        <label for="name">Name</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="text" required id="email" name="email">
+                        <div class="underline"></div>
+                        <label for="email">Email</label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-field text-area">
+                        <textarea rows="8" cols="80" required name="message"></textarea>
+                        <div class="underline"></div>
+                        <label for="message">Message</label>
+                    </div>
+                </div>
+                <div class="form-row submit-button">
+                    <div class="input-field">
+                        <div class="inner"></div>
+                        <input class="button button-accent" type="submit" value="Submit" name="submit">
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <footer-component></footer-component>
+
+    </body>
+    
+</html>

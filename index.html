@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Sidonie's Website</title>
+        <link href="css/styles.css" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="img/logo-i-blue.ico">
+        <script src="main.js"></script>
+        <script src="../components/footer.js" type="text/javascript" defer></script>
+        <script src="../components/header.js" type="text/javascript" defer></script>
+    </head>    
+    <body>
+        
+        <header-component></header-component>
+
+        <section class="home-hero">
+            <div class="container">
+                <h1 class="title"> Welcome to my Website!
+                    <span>Cooking & Programming</span>
+                </h1>
+                <a onclick="playClickSound()" class="button button-accent">Button</a>
+            </div>
+        </section>
+        
+        <audio id="mouseclick">
+            <source src="audio/mouseclick.mp3" type="audio/mp3">
+        </audio>
+
+        <div class="container">
+            <section class="home-about">
+                <div class="home-about-textbox">
+                    <h1>About</h1>
+
+                    <p>This website contains both recipes and programming&nbsp;/ computer science projects!</p>
+                    <p>Let me know if you would like any specific recipes or projects in the future.</p>
+
+                    <!--text here-->
+                </div>
+            </section>
+        </div>
+
+        <section class="portfolio">
+            <h1> Recent Uploads </h1>
+            
+            <!--portfolio item 1-->
+            <figure class="port-item">
+                <img src="img/port-potatoes.jpg" alt="portfolio item">
+                <figcaption class="port-desc">
+                    <p>Cwispy Smashed Potatoes</p>
+                    <a href="recipe/cwispy-potatoes" class="button button-accent button-small">
+                        Recipe
+                    </a>
+                </figcaption>
+            </figure>
+
+            <!--portfolio item 2-->
+            <figure class="port-item">
+                <img src="img/port-shoyu-ramen.jpg" alt="portfolio item">
+                <figcaption class="port-desc">
+                    <p>Shoyu Ramen</p>
+                    <a href="recipe/shoyu-ramen" class="button button-accent button-small">
+                        Recipe
+                    </a>
+                </figcaption>
+            </figure>
+
+            <!--portfolio item 3-->
+            <figure class="port-item">
+                <img src="img/port-tomato-tart.jpg" alt="portfolio item">
+                <figcaption class="port-desc">
+                    <p>Tomato Tart</p>
+                    <a href="recipe/tomato-tart" class="button button-accent button-small">
+                        Recipe
+                    </a>
+                </figcaption>
+            </figure>
+            
+        </section>
+
+        <footer-component></footer-component>
+
+    </body>
+    
+</html>
+
