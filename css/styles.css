@@ -894,7 +894,8 @@ nav a :focus {
     font-weight: bold;
     color: var(--darkgrey);
     grid-column: span 2;
-    margin-top: .75em;
+    margin-top: .6em;
+    margin-bottom: .3em;
 }
 
 .mandelbrot-label{
@@ -935,6 +936,11 @@ nav a :focus {
     border-color: var(--darkblue);
     color: var(--lightergrey);
 }
+.mandelbrot-button:disabled{
+    background: var(--lightergrey);
+    border-color: var(--lightergrey);
+    color: var(--mediumlightgrey);
+}
 .mandelbrot-button-wrapper{
     grid-column: span 2;
     margin-left: 2em;
@@ -956,13 +962,13 @@ nav a :focus {
     grid-column: span 2;
     margin-left: 1em;
     margin-right: 1em;
-    margin-bottom: .4em;
+    margin-bottom: .1em;
 }
 
 .mandelbrot-inputbox {
     display: grid;
     margin-top: .2em;
-    margin-bottom: 1em;
+    margin-bottom: .5em;
     grid-column: span 2;
 }
 .mandelbrot-optionbox {
