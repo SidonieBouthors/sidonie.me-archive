@@ -40,8 +40,6 @@ function simulateMandelbrot(){
     var mandelbrotMinY = - mandelbrotSize + centerY;
     var mandelbrotMaxY = mandelbrotSize + centerY;
 
-    setXYSlidersMinMax();
-
     var imagedata = context.createImageData(width, height);
     var offset = 0;
 
@@ -50,7 +48,7 @@ function simulateMandelbrot(){
 
             //real and imaginary parts of z
             var a = map(x, 0, width, mandelbrotMinX, mandelbrotMaxX);
-            var b = map(y, 0, height, mandelbrotMinY, mandelbrotMaxY);
+            var b = map(y, height, 0, mandelbrotMinY, mandelbrotMaxY);
             //real and imaginary parts of c
             var ca = a;
             var cb = b;
@@ -157,8 +155,8 @@ function getMaxY() {
 
 function showZoomValue(newValue){
     document.getElementById("mandelbrot-zoom-value").value = newValue;
-    //setXYSlidersMinMax();
-    //simulate();
+    setXYSlidersMinMax();
+    simulate();
 }
 function showXYValue(newX, newY, boolX, boolY){
     if (boolX) {
@@ -167,33 +165,20 @@ function showXYValue(newX, newY, boolX, boolY){
     if (boolY) {
         document.getElementById("mandelbrot-y-value").value = newY;
     }
-    //simulate();
+    simulate();
 }
 function showXValue(newValue){ showXYValue(newValue, 0, true, false);}
 function showYValue(newValue){ showXYValue(0, newValue, false, true)}
 
 function setXYSlidersMinMax(){
-    var zoom = getZoom();
     var centerX = getCenterX();
     var centerY = getCenterY();
-    var mandelbrotSize = mandelbrotDiam/zoom;
+    var mandelbrotSize = mandelbrotDiam/getZoom();
 
     document.getElementById("mandelbrot-x").min = - mandelbrotSize + centerX;
     document.getElementById("mandelbrot-x").max = mandelbrotSize + centerX;
     document.getElementById("mandelbrot-y").min = - mandelbrotSize + centerY;
     document.getElementById("mandelbrot-y").max = mandelbrotSize + centerY;
-
-    console.log("testing");
-    if (getCenterX() != centerX){
-        console.log("centerX changed");
-    }
-    if (document.getElementById("mandelbrot-x").value != centerX){
-        console.log("centerX slider changed");
-    }
-    console.log(centerX - ((parseFloat(document.getElementById("mandelbrot-x").min) + parseFloat(document.getElementById("mandelbrot-x").max)) / 2));
-    //newX = (newMaxX + newMinX)/2;
-    //newY = (newMaxY + newMinY)/2;
-    //setXYSliders( centerX.toFixed(3), centerY.toFixed(3));
 }
 function setXYSliders(newX, newY){
     document.getElementById("mandelbrot-x").value = newX;
@@ -206,13 +191,22 @@ function getCursorPosition(canvas, event) {
     scaleY = canvas.height / rect.height;
     const x = (event.clientX - rect.left)*scaleX;
     const y = (event.clientY - rect.top)*scaleY;
+    if (getMode() == 'Mandelbrot') {
+        setSliders(x, y);
+    } else {
+        setConstantJulia(x, y);
+    }
+}
+
+function setSliders(x, y) {
     const zoom = parseFloat(document.getElementById("mandelbrot-zoom-value").value);
     const mandelbrotSize = 2.0/zoom;
-    const newX = map(x, 0, canvas.width, -mandelbrotSize, mandelbrotSize) + getSliderCenterX();
-    const newY = map(y, 0, canvas.height, mandelbrotSize, -mandelbrotSize) + getSliderCenterY();
+    const newX = map(x, 0, canvas.width, -mandelbrotSize, mandelbrotSize) + getCenterX();
+    const newY = map(y, 0, canvas.height, mandelbrotSize, -mandelbrotSize) + getCenterY();
     setXYSliders(newX.toFixed(3), newY.toFixed(3));
-    setConstantJulia(x, y);
+    setXYSlidersMinMax();
 }
+
 function getSliderCenterX() {
     var min = parseFloat(document.getElementById("mandelbrot-x").min);
     var max = parseFloat(document.getElementById("mandelbrot-x").max);
@@ -271,17 +265,16 @@ function setConstantJulia(x, y){
     const im = map(y, 0, canvas.height, mandelbrotSize, -mandelbrotSize);
     document.getElementById("constant-real-number").value = re.toFixed(3);
     document.getElementById("constant-imaginary-number").value = im.toFixed(3);
+    simulate();
 }
 
 function turnOffAutoJulia(){
-    document.getElementById('generate-button').disabled = false;
     canvas.removeEventListener('mousemove', autoJulia);
     canvas.removeEventListener('pointerdown', pauseAutoJulia);
     canvas.removeEventListener('pointerdown', unpauseAutoJulia);
     canvas.addEventListener('mousedown', mouseDownCanvasEvent);
 }
 function turnOnAutoJulia(){
-    document.getElementById('generate-button').disabled = true;
     canvas.removeEventListener('mousedown', mouseDownCanvasEvent);
     canvas.addEventListener('mousemove', autoJulia);
     canvas.addEventListener('pointerdown', pauseAutoJulia);
@@ -348,6 +341,19 @@ function getColor(n, maxIterations, invertColours, colourScheme){
     return [r, g, b];
 }
 
+function downloadCanvasImage(){ 
+    var image = canvas.toDataURL();  
+  
+    // create temporary link  
+    var tmpLink = document.createElement( 'a' );  
+    tmpLink.download = getMode()+'-'+getColourScheme()+'.png'; 
+    tmpLink.href = image;  
+  
+    // temporarily add link to body and initiate the download  
+    document.body.appendChild( tmpLink );  
+    tmpLink.click();  
+    document.body.removeChild( tmpLink );
+}
 
 /*****ARCHIVE******
 function formatColor {

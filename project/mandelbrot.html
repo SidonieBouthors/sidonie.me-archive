@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 
-
-
 <html>
     <head>
         <meta charset="utf-8">
@@ -42,39 +40,44 @@
                     <label class="mandelbrot-mainlabel" id="section-label">Colour</label>
                     <div class="mandelbrot-optionbox">
                         <input type="radio" name="mandelbrot-colour" 
+                            onchange="simulate();"
                             class="mandelbrot-radio" id="red-radio" value="red">
                         <label for="red-radio" class="mandelbrot-label">red</label>
                     </div>
                     <div class="mandelbrot-optionbox">
                         <input type="radio" name="mandelbrot-colour" 
+                            onchange="simulate();"
                             class="mandelbrot-radio" id="blue-radio" value="blue"
                             checked="checked">
                         <label for="blue-radio" class="mandelbrot-label">blue</label>
                     </div>
                     <div class="mandelbrot-optionbox">
                         <input type="radio" name="mandelbrot-colour" 
+                            onchange="simulate();"
                             class="mandelbrot-radio" id="green-radio" value="green">
                         <label for="green-radio" class="mandelbrot-label">green</label>
                     </div>
                     <div class="mandelbrot-optionbox">
                         <input type="radio" name="mandelbrot-colour" 
+                            onchange="simulate();"
                             class="mandelbrot-radio" id="black-radio" value="black">
                         <label for="black-radio" class="mandelbrot-label">black</label>
                     </div>
                      <div class="mandelbrot-inputbox">
                         <label for="iteration-number" class="mandelbrot-mainlabel">Iterations per pixel</label>
                         <input type="number" min="0" max="1000" step="10" value="200"
+                            onchange="simulate();"
                             class="mandelbrot-number-input" id="iteration-number">
                     </div>
                     <div class="mandelbrot-inputbox">
                         <label for="invert-colour-checkbox" class="mandelbrot-mainlabel">Invert colours</label> 
-                        <select class="mandelbrot-select-input" id="select-inverted">
+                        <select class="mandelbrot-select-input" id="select-inverted" onchange="simulate();">
                             <option value="true">Yes</option>
                             <option value="false">No</option>
                         </select>
                     </div>
                     <!--<div class="mandelbrot-toolbar"></div>-->
-                    
+                    <textarea type="text" id="mandelbrot-error-message" value="" class="mandelbrot-error-message" rows="2" readonly></textarea>
                     
 
                 <h1 class="mandelbrot-title">Julia Set Settings</h1>
@@ -112,11 +115,13 @@
                     <div class="mandelbrot-inputbox" id="mandelbrot-real-constantbox">
                         <label for="constant-real-number" class="mandelbrot-mainlabel">Real</label>
                         <input type="number" min="-2" max="2" value="0" step="0.1"
+                            onchange="simulate();"
                             class="mandelbrot-number-input" id="constant-real-number">
                     </div>
                     <div class="mandelbrot-inputbox" id="mandelbrot-imaginary-constantbox">
                         <label for="constant-imaginary-number" class="mandelbrot-mainlabel">Imaginary</label>
                         <input type="number" min="-2" max="2" value="0" step="0.1" 
+                            onchange="simulate();"
                             class="mandelbrot-number-input" id="constant-imaginary-number">
                     </div>
 
@@ -132,11 +137,10 @@
                         <input type="radio" name="mandelbrot-julia-setting" value="Julia"
                             class="mandelbrot-radio" id="julia-radio">
                         <label for="julia-radio" class="mandelbrot-label">Julia</label>
-                    </div>
-
-                    <textarea type="text" id="mandelbrot-error-message" value="" class="mandelbrot-error-message" rows="2" readonly></textarea>
+                    </div>  
+                    
                     <div class="mandelbrot-button-wrapper">
-                        <button class="mandelbrot-button button" id="generate-button" onclick="simulate();">Generate</button>
+                        <!--<button class="mandelbrot-button button" id="generate-button" onclick="simulate();">Generate</button>-->
                         <button class="mandelbrot-button button" id="download-button" onclick="downloadCanvasImage();">Download</button>
                     </div>
             </section>

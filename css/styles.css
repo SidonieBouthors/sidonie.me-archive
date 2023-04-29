@@ -930,6 +930,7 @@ nav a :focus {
     font-weight: bold;
     text-transform: none;
     margin: .3em;
+    width: 60%;
 }
 .mandelbrot-button:hover{
     background: var(--darkblue);
@@ -945,9 +946,8 @@ nav a :focus {
     grid-column: span 2;
     margin-left: 2em;
     margin-right: 2em;
-    display: grid;
+    margin-top: 1.5em;
     grid-template-columns: 1fr 1fr;
-    
 }
 
 .mandelbrot-error-message{
@@ -1120,6 +1120,59 @@ nav a :focus {
     }
     .mandelbrot-container{
         grid-template-columns: 1fr 2fr;
+    }
+}
+
+/* chess page
+********************************************/
+
+.chess-container {
+    margin: 1em;
+    display: inline-block;
+    border: 5px solid #000;
+    --side : 80vw;
+    width: var(--side);
+    height: var(--side);
+}
+
+.chess-board {
+    display: inline-block;
+    background-color: #ffffff;
+    border-spacing:0;
+    width: 100%;
+}
+
+.chess-board tr {
+    width: 100%;
+}
+
+.chess-board td {
+    color: #000;
+}
+
+.chess-board tr:nth-child(odd) td:nth-child(odd), 
+            tr:nth-child(even) td:nth-child(even) {
+    background-color: #000000;
+}
+
+@media (min-width:40rem){
+    .chess-container {
+        width: 30em;
+        height: 30em;
+    }
+}
+
+@media (min-width:60rem){
+    .chess-container {
+        width: 25em;
+        height: 25em;
+    }
+}
+
+@media (min-width:75rem){
+    .chess-container {
+        width: 45em;
+        height: 45em;
     }
 }
 
