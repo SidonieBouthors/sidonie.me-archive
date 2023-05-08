@@ -31,7 +31,7 @@ class Header extends HTMLElement {
             </nav>
             </header>
 
-            <section class="${this.getAttribute("hero")}">
+            <section class="page-hero ${this.getAttribute("hero")}">
                 <div class="container">
                     <h1 class="title">${this.title}</h1>
                 </div>

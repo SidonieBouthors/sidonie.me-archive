@@ -1,5 +1,13 @@
 
+displayBoard();
+
 function displayBoard(){
-    const chesssquare = document.createElement("div", {class:"chess-square"});
-    document.getElementById("chessboard").insertAdjacentHTML("beforeend", chesssquare);
+    insertSquare();
+    insertSquare();
+}
+
+function insertSquare(){
+    const square = document.createElement("div");
+    square.classList.add("chess-square", "black");
+    document.getElementById("chessboard").insertAdjacentElement("beforeend", square);
 }

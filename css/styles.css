@@ -93,6 +93,7 @@ footer::after {
 p {
     font-weight: 300;
     font-size: 1.3rem;
+    text-align: left;
 }
 
 h1 {
@@ -100,6 +101,15 @@ h1 {
     font-weight: 250;
     font-size: 3rem;
     margin-top:0;
+}
+
+h2 {
+    font-family: "Satoshi-Medium";
+    font-size: 2rem;
+    margin-top: .6em;
+    margin-bottom: .3em;
+    font-weight: bold;
+    color: var(--darkgrey);
 }
 
 .title{
@@ -265,90 +275,87 @@ nav a :focus {
     }
 }
 
+/* about hero
+*******************************************/
 
+.about-hero {
+    background-color:rgba(0, 0, 0, 0.5);
+    background-blend-mode: overlay;
+    padding: 10em 1em;
+    background-size:cover;
+    background-position: center;
+    color: #ffffff;
+}
+
+.about-text {
+    max-width: 50%;
+    width: 50%;
+    display: inline-block;
+}
+
+@media (min-width: 30rem) {
+    .about-hero {
+        height: 75vh;
+        padding: 12em 1em;
+    }
+}
+
+@media (min-width: 60rem) {
+    .about-hero {
+        height: 75vh;
+        padding: 6em 1em;
+    }
+}
+
+
+/* page hero
+*******************************************/
+
+.page-hero {
+    padding: 13em  0;
+    height: 60vh;
+    background-size: cover;
+    background-position: center;
+    color: #FFF;
+}
+
+@media (min-width: 40rem) {
+    .page-hero {
+        height: 50vh;
+        padding-top: 10em;
+
+    }
+}
+@media (min-width: 60rem) {
+    .page-hero {
+        height: 40vh;
+        padding-top: 10vh;
+
+    }
+}
 
 /* recipes page hero
 *******************************************/
 
 .recipe-page-hero {
     background-image: url(../img/bg-recipe.jpg);
-    padding: 13em  0;
-    height: 95vh;
-    background-size: cover;
-    background-position: center;
-    color: #FFF;
-}
-
-@media (min-width: 30rem) {
-    .recipe-page-hero {
-        padding: 10em  0;
-        height: 50vh;
-        padding-top: 8em;
-
-    }
-}
-@media (min-width: 60rem) {
-    .recipe-page-hero {
-        height: 40vh;
-        padding-top: 10vh;
-    }
 }
 
 /* projects page hero
 *******************************************/
 
 .project-page-hero {
-
     background-image: url(../img/bg-project.jpg);
-    padding: 10em  0;
-    height: 60vh;
-    background-size: cover;
-    background-position: center;
-    color: #FFF;
 }
 
-@media (min-width: 30rem) {
-    .project-page-hero {
-        height: 50vh;
-        padding-top: 8em;
-
-    }
-}
-@media (min-width: 60rem) {
-    .project-page-hero {
-        height: 40vh;
-        padding-top: 10vh;
-
-    }
-}
 
 /* contact page hero
 *******************************************/
 
 .contact-page-hero {
-
     background-image: url(../img/bg-contact.jpg);
-    padding: 10em  0;
-    height: 60vh;
-    background-size: cover;
-    background-position: center;
-    color: #FFF;
 }
 
-@media (min-width: 30rem) {
-    .contact-page-hero {
-        height: 50vh;
-        padding-top: 8em;
-
-    }
-}
-@media (min-width: 60rem) {
-    .contact-page-hero {
-        height: 40vh;
-        padding-top: 10vh;
-
-    }
-}
 
 /* home about
 **********************************************/
@@ -451,10 +458,44 @@ nav a :focus {
     }
 }
 
+/* about page
+********************************************/
+
+.about-section {
+    margin : 1em;
+    display: grid;
+    grid-auto-flow: dense;
+    grid-template-columns: repeat(2, 1fr);
+}
+.about-section-text {
+    margin: 1em;
+    text-align: left;
+}
+
+.about-section-illus {
+    margin: 1em;
+    
+}
+
+@media (min-width: 40rem) {
+    
+}
+
+@media (min-width: 60rem) {
+    .about-section-text {
+        max-width: 30%;
+        float: left;  
+        align-items: left;
+    }
+    .about-section-illus {
+        max-width: 30%;
+        float: right; 
+        align-items: right;
+    }
+}
+
 /* recipes layout
 ***************************************/
-
-
 
 .recipe-coll{
     display: grid;
@@ -890,7 +931,7 @@ nav a :focus {
 }
 
 .mandelbrot-title {
-    font-size: 2em;
+    font-size: 2rem;
     font-weight: bold;
     color: var(--darkgrey);
     grid-column: span 2;
@@ -1123,35 +1164,67 @@ nav a :focus {
     }
 }
 
+/* graphic design page
+********************************************/
+
+.graphic-design-container {
+    display: grid;
+    margin: 3em;
+    grid-auto-flow:dense;
+}
+
+.graphic-design-pres {
+    padding: 1em;
+    float: left;
+}
+
+.graphic-design-illus {
+    float: right;
+}
+
+.bugz-poster {
+    padding: 1em;
+    max-height: 100vh;
+}
+
+@media (min-width:40rem){
+}
+
+@media (min-width:60rem){
+    .graphic-design-container{
+        grid-template-columns: 1fr 1fr;
+        margin: 3em 10em;
+    }
+}
+
+@media (min-width:75rem){
+}
+
 /* chess page
 ********************************************/
 
 .chess-container {
     margin: 1em;
+    padding: 0;
     display: inline-block;
-    border: 5px solid #000;
-    --side : 80vw;
-    width: var(--side);
-    height: var(--side);
+    width: var(80vw);
+    height: var(80vw);
+
 }
 
 .chess-board {
     display: inline-block;
     background-color: #ffffff;
-    border-spacing:0;
-    width: 100%;
+    border: 5px solid #000;
+    width:100%;
+    height: 100%;
 }
 
-.chess-board tr {
-    width: 100%;
+.chess-square {
+    background-color: #036fbd;
 }
 
-.chess-board td {
-    color: #000;
-}
-
-.chess-board tr:nth-child(odd) td:nth-child(odd), 
-            tr:nth-child(even) td:nth-child(even) {
+.chess-square.black {
     background-color: #000000;
 }
 
