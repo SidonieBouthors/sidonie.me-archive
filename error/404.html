@@ -3,23 +3,25 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Sidonie's Website</title>
-        <link href="css/styles.css" rel="stylesheet" type="text/css">
-        <link rel="shortcut icon" href="img/logo-i-blue.ico">
-        <script src="main.js"></script>
+        <title>Error 404</title>
+        <link href="../css/styles.css" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../img/logo-i-blue.ico">
         <script src="../components/footer.js" type="text/javascript" defer></script>
         <script src="../components/header.js" type="text/javascript" defer></script>
     </head>    
     <body>
         
-        <header-component></header-component>
+        <header-component hero="no-hero"></header-component>
 
         <div class="message404">
             <h1 class="title title404">Error 404
                 <span>Looks like you're lost</span>
             </h1>
-            <a href="" class="button button-accent">Home</a>
-            <a href="" class="button button-accent">Report a broken link</a>
+            <div class="button-container">
+                <a href="/" class="button button-accent">Home</a>
+                <a href="/contact.html" class="button button-accent">Report a broken link</a>
+            </div>
+            
         </div>
 
         <footer-component></footer-component>

@@ -198,6 +198,10 @@ h2 {
     color: var(--darkgrey);
 }
 
+.button-container {
+    display: inline-flex;
+    gap: 1.5em;
+}
 
 /* header 
 ***********************************/
@@ -332,7 +336,6 @@ nav a :focus {
     background-image: url(../img/bg-contact.jpg);
 }
 
-
 /* home about
 **********************************************/
 
@@ -345,6 +348,10 @@ nav a :focus {
     color: #000;
     position: relative;
 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .home-about-textbox h1 {
@@ -352,9 +359,14 @@ nav a :focus {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    top: .35em;
+    top: .2em;
     background: var(--background);
     padding: 0 .145em;
+}
+
+.home-about-textbox p {
+    text-align: center;
+    max-width: 70ch;
 }
 
 @media (min-width: 25rem) {
@@ -408,6 +420,7 @@ nav a :focus {
 }
 
 .port-desc p {
+    text-align: center;
     margin: 1em;
 }
 
@@ -474,20 +487,52 @@ nav a :focus {
 .about-section {
     background-color: #232323;
     padding: 3em 1em;
+    font-weight: 500;
+    font-size: 1.1rem;
+    --text-color: #000;
+    color: var(--text-color);
 }
+
 .about-section p {
-    font-weight: 550;
+    font-weight: 500;
     font-size: 1.1rem;
     text-align: left;
     margin: 0;
+    color: var(--text-color);
 }
 .about-section h2 {
     margin: 0;
+    color: var(--text-color);
 }
 .about-section h3 {
     font-size: 1.2rem;
     margin: 0;
     margin-top: .5em;
+    color: var(--text-color);
+}
+
+.about-block {
+    text-align: left;
+    padding: 1.2em;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.about-block::after {
+    display: none;
+    content: none;
+}
+
+.about-block a {
+    display: contents;
+}
+
+.about-block-logo {
+    max-width: max(60%, 12em);
+    max-height: 4em;
+    margin-bottom: 1em;
 }
 
 .about-grid {
@@ -495,9 +540,9 @@ nav a :focus {
     margin: auto;
     display: grid;
     gap : 1.5em;
-
     /* for phone */
-    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    grid-auto-columns: 1fr;
     grid-template-areas: 'epfl'
                          'languages'
                          'clic'
@@ -513,34 +558,8 @@ nav a :focus {
                          'travel';
 }
 
-.about-block {
-    text-align: left;
-    overflow: hidden;
-    display: block;
-    gap: 0;
-    
-    padding: 1.2em;
-    
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.about-block-logo-link {
-    display: contents;
-}
-
-.about-block-logo { 
-    margin-top : 0;
-    max-height: 30%;
-}
-
 @media (min-width: 40rem) {
     .about-grid {
-        display: grid;
-        gap : 1.5em;
-        grid-template-columns: repeat(2, 1fr);
         grid-template-areas: 'epfl epfl'
                          'epfl epfl'
                          'clic languages'
@@ -550,64 +569,26 @@ nav a :focus {
                          'sgdf sgdf'
                          'bafa bad'
                          'ftc ftc'
-                         'web web'
-                         'web web'
-                         'cook prog'
-                         'travel prog';
+                         'web prog'
+                         'cook prog';
     }
-
-    .about-block {
-        display: block;
-    }
-    /*.block-2x2 .about-block-logo { max-width: 70%;}
-    .block-2x1 .about-block-logo { max-width: 50%;}
-    .block-1x2 .about-block-logo { max-width: 90%;}
-    .block-1x1 .about-block-logo { max-width: 70%;}*/
 }
 
 @media (min-width: 60rem) {
     .about-grid {
-        grid-auto-rows: 1fr;
-        grid-template-columns: repeat(3, 1fr);
         grid-template-areas: 'epfl epfl languages'
                             'epfl epfl gamestar'
                             'clic s4s s4s'
                             'clic s4s s4s'
                             'sgdf sgdf bafa'
                             'bad ftc ftc'
-                            'web web cook'
                             'web web prog'
-                            'travel travel prog';
+                            'cook cook prog'
+                            'travel travel travel';
     }
-    /*
-    .block-1x1{
-        aspect-ratio: 1 / 1;
-        padding: 1.2em;}
-    .block-2x2 {
-        aspect-ratio: 1 / 1;
-        padding: 2em;}
-    .block-1x2 {
-        aspect-ratio: auto;
-        padding: 2em 1.5em ;}
-    .block-2x1 {
-        aspect-ratio: auto;
-        padding: 1.5em;}*/
-
-    /*.block-2x2 .about-block-logo { 
-        max-width: 75%;
-        max-height: 30%;
+    .about-block {
+        display: initial;
     }
-    .block-2x1 .about-block-logo { 
-        max-width: 50%;
-        max-height: 30%;
-    }
-    .block-1x2 .about-block-logo { 
-        max-width: 100%;
-    }
-    .block-1x1 .about-block-logo { 
-        max-width: 70%;
-        max-height: 25%;
-    }*/
 }
 
 /* individual blocks designs */
@@ -632,13 +613,11 @@ nav a :focus {
     flex-flow: column nowrap;
     justify-content: space-around;
 }
-.language-block h2 {
-    color: var(--text-color);
-}
-.language-bar {
+
+.lang-bar {
     margin: .1em 0;
     padding: 0em .4em;
-    line-height: 3em;
+    line-height: 2;
     max-height: 3em;
     background-color: var(--grey);
     width: var(--level);
@@ -651,25 +630,28 @@ nav a :focus {
 }
 
 @media (min-width: 40rem) {
-    .language-bar {
+    .lang-bar {
         line-height: 1.5;
     }
 }
 
 .gamestar-block {
-    background-color: #DDD;
     grid-area: gamestar;
+    background-color: #DDD;
+    
 }
 
 .clic-block {
-    background-color: #ffffff;
     grid-area: clic;
+    background-color: var(--lightergrey);
+    
 }
 
 .s4s-block {
-    background-color: #545784;
-    color: #fff;
     grid-area: s4s;
+    background-color: #545784;
+    --text-color: #fff;
+    color: var(--text-color);
     background-image: radial-gradient(
         circle at 10px 10px,
         rgba(81, 85, 130, 0) 0%,
@@ -701,39 +683,63 @@ nav a :focus {
 }
 
 .ftc-block {
-    background-color: #17435c;
-    color: white;
     grid-area: ftc;
+    background-color: #17435c;
+    --text-color: #fff;
+    color: var(--text-color);
 }
 
 .badminton-block {
-    background-color: #4b4b4b;
-    color: white;
     grid-area: bad;
+    background-color: #4b4b4b;
+    --text-color: #fff;
 }
 
 .web-block {
-    background-color: #4b4b4b;
-    color: white;
     grid-area: web;
+    background-color: var(--mediumlightgrey);
+    color: white;
+    
 }
 
 .cook-block {
-    background-color: #4b4b4b;
-    color: white;
     grid-area: cook;
+    background-color: var(--mediumlightgrey);
+    color: white;
+    
 }
 
 .prog-block {
-    background-color: #4b4b4b;
-    color: white;
     grid-area: prog;
+    background-color: var(--mediumlightgrey);
+    color: white;
+    
+}
+
+.skill-bar {
+    margin: .1em 0;
+    height: 1em;
+    background-color: var(--grey);
+    width: var(--level);
+    
+    justify-content: left;
+    vertical-align: middle;
+    text-align: end;
+    font-style: italic; 
+    color: #DEEEFA;
+}
+.prog-lang-icon {
+    height: 200%;
+    position: relative;
+    bottom: .5em;
+    left: 1em;
 }
 
 .travel-block {
+    grid-area: travel;
     background-color: #4b4b4b;
     color: white;
-    grid-area: travel;
+    
 }
 
 
@@ -1140,6 +1146,20 @@ nav a :focus {
     font-size:1.2em;
     color: var(--grey);
     text-align: left;
+}
+
+
+/* article
+********************************************/
+
+.article-page {
+    margin: 2em;
+    display: flex;
+    justify-content: center;
+}
+.article {
+    overflow-wrap: break-word;
+    max-width: min(80ch, 90%);
 }
 
 /* mandelbrot page

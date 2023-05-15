@@ -7,7 +7,7 @@
    width="90.156723"
    height="168.01385"
    viewBox="0 0 90.156723 168.01385"
-   sodipodi:docname="icone-prise.svg"
+   sodipodi:docname="sido-plug-logo.svg"
    inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -27,8 +27,8 @@
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
      inkscape:zoom="2.7583008"
-     inkscape:cx="-48.761904"
-     inkscape:cy="12.688971"
+     inkscape:cx="-118.36998"
+     inkscape:cy="39.15454"
      inkscape:window-width="2160"
      inkscape:window-height="1346"
      inkscape:window-x="-11"
@@ -54,25 +54,25 @@
      inkscape:label="Logo Trait"
      transform="translate(-199.61555,-60.763919)">
     <path
-       style="fill:none;stroke:#00bfff;stroke-width:13.8479;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:none;stroke:#036fbd;stroke-width:13.8479;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="m 228.76173,181.39744 29.40186,0.003 c 0,0 0.36273,-12.62103 0.25577,-15.5034 29.73849,-22.21741 24.06887,-57.24229 24.06887,-57.24229 l -74.63222,0.58371 c 0,0 -9.19696,28.32666 20.6033,56.34241 0.16208,6.59157 0.30242,15.8167 0.30242,15.8167 z"
        id="path2004"
        sodipodi:nodetypes="cccccccc"
        inkscape:label="prise" />
     <path
-       style="fill:none;stroke:#00bfff;stroke-width:13.8479;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:none;stroke:#036fbd;stroke-width:13.8479;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="m 221.99811,67.927714 0.44894,39.205686"
        id="path2008"
        sodipodi:nodetypes="cc"
        inkscape:label="barre prise gauche" />
     <path
-       style="fill:none;stroke:#00bfff;stroke-width:13.8479;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:none;stroke:#036fbd;stroke-width:13.8479;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="m 262.77904,67.687869 0.44892,38.118111"
        id="path2008-3"
        sodipodi:nodetypes="cc"
        inkscape:label="barre prise droite" />
     <path
-       style="fill:none;stroke:#00bfff;stroke-width:12.9564;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:none;stroke:#036fbd;stroke-width:12.9564;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="m 243.50188,186.23782 c 0.34795,39.23432 0.42002,36.10924 0.42002,36.10924"
        id="path2008-3-4"
        sodipodi:nodetypes="cc"
