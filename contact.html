@@ -21,35 +21,37 @@
         
         <header-component title="Contact" hero="contact-page-hero"></header-component>
 
-        <section class="msg-form">
-            <form action="contactform.php">
-                <div class="form-row">
-                    <div class="input-field">
-                        <input type="text" required id="name" name="name">
-                        <div class="underline"></div>
-                        <label for="name">Name</label>
+        <main>
+            <section class="msg-form">
+                <form action="contactform.php">
+                    <div class="form-row">
+                        <div class="input-field">
+                            <input type="text" required id="name" name="name">
+                            <div class="underline"></div>
+                            <label for="name">Name</label>
+                        </div>
+                        <div class="input-field">
+                            <input type="text" required id="email" name="email">
+                            <div class="underline"></div>
+                            <label for="email">Email</label>
+                        </div>
                     </div>
-                    <div class="input-field">
-                        <input type="text" required id="email" name="email">
-                        <div class="underline"></div>
-                        <label for="email">Email</label>
+                    <div class="form-row">
+                        <div class="input-field text-area">
+                            <textarea rows="8" cols="80" required name="message"></textarea>
+                            <div class="underline"></div>
+                            <label for="message">Message</label>
+                        </div>
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="input-field text-area">
-                        <textarea rows="8" cols="80" required name="message"></textarea>
-                        <div class="underline"></div>
-                        <label for="message">Message</label>
+                    <div class="form-row submit-button">
+                        <div class="input-field">
+                            <div class="inner"></div>
+                            <input class="button button-accent" type="submit" value="Submit" name="submit">
+                        </div>
                     </div>
-                </div>
-                <div class="form-row submit-button">
-                    <div class="input-field">
-                        <div class="inner"></div>
-                        <input class="button button-accent" type="submit" value="Submit" name="submit">
-                    </div>
-                </div>
-            </form>
-        </section>
+                </form>
+            </section>
+        </main>
 
         <footer-component></footer-component>
 

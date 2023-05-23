@@ -19,21 +19,25 @@ class Footer extends HTMLElement {
             <div class="footer-col">
                 <h3>Social Media</h3>
                 <ul class="unstyled-list">
-                    <li ><a href="">
+                    <li ><a href="https://www.linkedin.com/in/sidonie-bouthors/" target="_blank" rel="noopener noreferrer">
                         <img class="footer-icon"
+                            alt="linkedin logo"
                             src="../img/icons/linkedin-logo-round.svg"> LinkedIn
                     </a></li>
-                    <li><a href="">
+                    <li><a href="https://t.me/sidonie_b" target="_blank" rel="noopener noreferrer">
                         <img class="footer-icon"
+                        alt="telegram logo"
                         src="../img/icons/telegram-logo-round.svg"> Telegram
                     </a></li>
-                    <li><a href="">
+                    <li><a href="mailto:sidonie@bouthors.com" target="_blank" rel="noopener noreferrer">
                         <img class="footer-icon"
-                        src="../img/icons/github-logo-round.svg"> GitHub EPFL
+                        alt="github logo"
+                        src="../img/icons/email-logo-round.svg"> Email
                     </a></li>
-                    <li><a href="">
+                    <li><a href="https://github.com/SidonieBouthors" target="_blank" rel="noopener noreferrer">
                         <img class="footer-icon"
-                        src="../img/icons/github-logo-round.svg"> GitHub Personnal
+                        alt="github logo"
+                        src="../img/icons/github-logo-round.svg"> GitHub
                     </a></li>
                     
                 </ul>

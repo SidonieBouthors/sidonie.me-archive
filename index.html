@@ -8,8 +8,21 @@
         <meta name="author" content="Sidonie Bouthors">
 
         <title>Sidonie's Website</title>
-        <link href="css/styles.css" rel="stylesheet" type="text/css">
+
+        <link href="css/styles.css" rel="stylesheet" type="text/css" media="all">
+
+        <link rel="preload" fetchpriority="high" as="image" href="img/bg.jpg">
+        
         <link rel="shortcut icon" href="img/logo-i-blue.ico">
+        
+        <meta property="og:title" content="Sidonie's Website - Cooking & Programming">
+        <meta property="og:description" content="Personal website of Sidonie Bouthors, with plenty of recipes and projects!">
+        <meta property="og:image" content="http://sidonie.me/img/share-image.jpg">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:url" content="sidonie.me">
+        
+        
         <script src="main.js"></script>
         <script src="../components/footer.js" type="text/javascript" defer></script>
         <script src="../components/header.js" type="text/javascript" defer></script>
@@ -18,12 +31,13 @@
         
         <header-component hero="no-hero"></header-component>
 
+        <main>
         <section class="home-hero">
             <div class="container">
                 <h1 class="title"> Welcome to my Website!
                     <span>Cooking & Programming</span>
                 </h1>
-                <a href="" class="button button-accent">About Me</a>
+                <a href="about.html" class="button button-accent">About Me</a>
             </div>
         </section>
         
@@ -86,6 +100,7 @@
             </figure>
             
         </section>
+        </main>
 
         <footer-component></footer-component>
 

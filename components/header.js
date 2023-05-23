@@ -6,7 +6,9 @@ class Header extends HTMLElement {
         if (this.getAttribute("hero")=="no-hero"){
             this.innerHTML = `
             <header>
+            <a href="/">
             <img src="../img/logo.svg" alt="SidoniePyLogo" class="logo">
+            </a>
             <nav>
                 <ul>
                     <li><a href="/">Home</a></li>
@@ -20,7 +22,9 @@ class Header extends HTMLElement {
         else if (this.getAttribute("hero") != null) {
             this.innerHTML = `
             <header>
+            <a href="/">
             <img src="../img/logo.svg" alt="SidoniePyLogo" class="logo">
+            </a>
             <nav>
                 <ul>
                     <li><a href="/">Home</a></li>
@@ -40,7 +44,9 @@ class Header extends HTMLElement {
         else {
             this.innerHTML = `
             <header>
+            <a href="/">
             <img src="../img/logo.svg" alt="SidoniePyLogo" class="logo">
+            </a>
             <nav>
                 <ul>
                     <li><a href="/">Home</a></li>

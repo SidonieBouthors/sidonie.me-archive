@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+
+<svg
+   width="1098.3052"
+   height="1098.3052"
+   viewBox="0 0 32.949155 32.949155"
+   fill="none"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="email-logo-round.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     id="namedview8"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.834386"
+     inkscape:cx="532.12782"
+     inkscape:cy="611.2279"
+     inkscape:window-width="2160"
+     inkscape:window-height="1346"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg6" />
+  <path
+     id="path343"
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.306947;stroke-miterlimit:0;paint-order:markers fill stroke"
+     d="M 16.47457,0 C 7.3759178,3.8659901e-6 3.8659901e-6,7.3759178 0,16.47457 c 3.8659901e-6,9.098652 7.3759178,16.474566 16.47457,16.47457 9.098652,-4e-6 16.474566,-7.375918 16.47457,-16.47457 C 32.949136,7.3759178 25.573222,3.8659901e-6 16.47457,0 Z M 9.4746093,8.4745898 H 23.47459 c 1.644697,0 3.36,1.7153022 3.36,3.3600002 v 10.000019 c 0,1.644699 -1.715303,3.36 -3.36,3.36 H 9.4746093 c -1.6446979,0 -3.36,-1.715301 -3.36,-3.36 V 11.83459 c 0,-1.644698 1.7153021,-3.3600002 3.36,-3.3600002 z m 0,2.3600392 c -0.1884434,0 -0.3613274,0.04671 -0.5084766,0.129726 0.037488,0.02082 0.073598,0.04403 0.1081055,0.06949 l 6.2011518,4.650351 c 0.714725,0.536027 1.683694,0.536027 2.398418,0 l 6.201211,-4.650351 c 0.03455,-0.02544 0.0707,-0.04863 0.108223,-0.06943 C 23.836059,10.881345 23.663101,10.83463 23.47459,10.83463 Z M 8.4745898,13.44498 v 8.389629 c 0,0.571297 0.428724,1.00002 1.0000195,1.00002 H 23.47459 c 0.571295,0 1.000019,-0.428723 1.000019,-1.00002 V 13.44498 l -5.599629,4.198828 c -1.41867,1.06397 -3.382091,1.06397 -4.800761,0 z"
+     sodipodi:nodetypes="cccccssssssssssccccccsscsssscccc" />
+</svg>

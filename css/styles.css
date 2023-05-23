@@ -1,5 +1,6 @@
-@import url('https://fonts.googleapis.com/css?family=Raleway:300,400,700,900');
 @import url('satoshi.css');
+@import url('https://fonts.googleapis.com/css?family=Raleway:300,400,700,900');
+
 
 * {
     box-sizing: border-box;
@@ -343,7 +344,7 @@ nav a :focus {
     background-color: var(--background);
     padding: 3em;
     width: 95vw;
-    outline: 2px solid var(--highlight);
+    outline: 2px solid var(--darkblue);
     outline-offset: -2.5em;
     color: #000;
     position: relative;
@@ -355,7 +356,7 @@ nav a :focus {
 }
 
 .home-about-textbox h1 {
-    color : var(--highlight);
+    color : var(--darkblue);
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -453,29 +454,53 @@ nav a :focus {
 .about-hero {
     background-color: var(--grey);
     background-blend-mode: overlay;
-    padding: 10em 1em;
+    min-height: 100vh;
+    padding: 12em 2em 1em;
     background-size:cover;
     background-position: center;
     color: #ffffff;
 }
 
+.about-hero .title {
+    margin-bottom: .3em;
+}
+
+.about-hero-content {
+    display: flex;
+    justify-content: space-between;
+    vertical-align: middle;
+}
+
 .about-text {
-    max-width: 50%;
-    width: 50%;
-    display: inline-block;
+    vertical-align: middle;
+}
+
+.about-text h2 {
+    text-align: left;
+    color: white;
+}
+
+.about-portrait {
+    display: none;
+    
 }
 
 @media (min-width: 30rem) {
     .about-hero {
-        height: 100vh;
-        padding: 12em 1em;
+        padding: 12em 5em 1em;
     }
 }
 
 @media (min-width: 60rem) {
     .about-hero {
-        height: 100vh;
-        padding: 6em 1em;
+        padding: 6em 8em 1em;
+    }
+    .about-text {
+        max-width: 50%;
+    }
+    .about-portrait {
+        display: block;
+        max-width: 28%;
     }
 }
 
@@ -491,6 +516,8 @@ nav a :focus {
     font-size: 1.1rem;
     --text-color: #000;
     color: var(--text-color);
+    overflow: hidden;
+    position: relative;
 }
 
 .about-section p {
@@ -514,6 +541,7 @@ nav a :focus {
 .about-block {
     text-align: left;
     padding: 1.2em;
+    z-index: 1;
 
     display: flex;
     flex-flow: column nowrap;
@@ -1748,5 +1776,129 @@ footer a {
 }
 
 .title404 {
-    margin-top: 5em;
+    margin-top: 7em;
+}
+
+.buttons404 {
+    padding: 1em;
+    display: inline-flex;
+    flex-direction: column;
+}
+
+@media (min-width:40rem){
+    .title404 {
+        margin-top: 7em;
+    }
+    .buttons404 {
+        padding: 1em;
+        flex-direction: row;
+    }
+}
+@media (min-width:60rem){
+    .title404 {
+        margin-top: 5em;
+    }
+}
+
+/*********************************************************************************/
+
+
+.light {
+    position: absolute;
+    width: 1px;
+    opacity: .2;
+    background-color: rgb(255, 244, 205);
+    box-shadow: #ffd78c 0px 0px 20px 2px;
+    opacity: 0;
+    top: 100%;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    margin: auto;
+    z-index: 0;
+
+    animation: floatUp var(--seconds) infinite linear;
+    transform: scale(var(--scale));
+    left: var(--pos);
+}
+
+.x1{
+    --seconds: 4s;
+    --scale: 1.0;
+    --pos: -90%;
+}
+
+.x2{
+    --seconds: 2.2s;
+    --scale: 1.6;
+    --pos: -70%;
+}
+
+.x3{
+    --seconds: 2.5s;
+    --scale: .5;
+    --pos: 95%;
+}
+
+.x4{
+    --seconds: 4.5s;
+    --scale: 1.2;
+    --pos: 0%;
+}
+
+.x5{
+    --seconds: 2s;
+    --scale: 2.2;
+    --pos: -30%;
+}
+
+.x6{
+    --seconds: 3s;
+    --scale: .8;
+    --pos: -55%;
+}
+
+.x7{
+    --seconds: 5.3s;
+    --scale: 3.2;
+    --pos: 37%;
+}
+
+.x8{
+    --seconds: 4.7s;
+    --scale: 1.7;
+    --pos: 67%;
+}
+
+.x9{
+    --seconds: 4.1s;
+    --scale: .9;
+    --pos: 85%;
+}
+
+@keyframes floatUp{
+  0%{top: 100%; opacity: 0;}
+  25%{opacity: 1;}
+  50%{top: 0%; opacity: .8;}
+  75%{opacity: 1;}
+  100%{top: -100%; opacity: 0;}
+}
+
+@keyframes fadeIn{
+  from{opacity: 0;}
+  to{opacity: 1;}
+}
+
+@keyframes fadeOut{
+  0%{opacity: 0;}
+  30%{opacity: 1;}
+  80%{opacity: .9;}
+  100%{opacity: 0;}
+}
+
+@keyframes finalFade{
+  0%{opacity: 0;}
+  30%{opacity: 1;}
+  80%{opacity: .9;}
+  100%{opacity: 1;}
 }
