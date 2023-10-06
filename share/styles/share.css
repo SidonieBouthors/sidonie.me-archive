@@ -1,0 +1,562 @@
+@import url('fonts.css');
+
+:root {
+    --border-radius: 0.5rem;
+  }
+  
+  body {
+    color: #16191d;
+    padding: 0;
+    margin: 0;
+    orphans: 2;
+  }
+  
+  #container {
+    margin-right: 22rem;
+  }
+  
+  main {
+    max-width: 38rem;
+    margin: 5rem auto;
+  }
+  
+  #toc {
+    position: fixed;
+    top: 5rem;
+    right: 2rem;
+    width: 20rem;
+    max-height: calc(100vh - 10rem);
+    overflow-y: auto;
+    margin: 0;
+    padding: 0.5rem 1.5rem;
+    border-left: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  
+  #toc h2 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  
+  #toc ul {
+    list-style: none;
+    padding-left: 1.5rem;
+    font-size: 0.9em;
+  }
+  
+  #toc > ul {
+    padding: 0;
+  }
+  
+  #toc > ul ul {
+    font-size: 0.9em;
+  }
+  
+  #toc a {
+    color: #888;
+    text-decoration: none;
+  }
+  
+  .wide {
+    margin: 0 -5rem;
+  }
+  
+  h1,
+  h2,
+  h3,
+  h4 {
+    page-break-after: avoid;
+  }
+  
+  :is(h1,h2,h3,h4) a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  :is(h2,h3,h4) a::before {
+    content: "§";
+    display: inline-block;
+    margin-left: -0.8em;
+    width: 0.8em;
+    color: #767684;
+    visibility: hidden;
+  }
+  
+  :is(h2,h3,h4) a:hover::before {
+    visibility: visible;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 1em;
+  }
+  
+  h2 {
+    margin-top: 1.5em;
+  }
+  
+  h3 {
+    margin-top: 1.5em;
+  }
+  
+  header {
+    margin: 2rem 0 3rem;
+  }
+  
+  .header-section-number::after,
+  .toc-section-number::after {
+    content: " ";
+  }
+  
+  blockquote {
+    border-left: 0.5em solid #ccc;
+    padding-left: 0.7em;
+    margin-left: 0;
+  }
+  
+  figure {
+    margin: 2em 0 1em;
+    text-align: center;
+  }
+  
+  figcaption {
+    margin: 0 4em;
+  }
+  
+  figcaption::before {
+    content: "Figure: ";
+  }
+  
+  :not(h1,h2,h3,h4) > a {
+    color: #0b529d;
+    word-wrap: break-word;
+  }
+  
+  h1 a {
+    cursor: default;
+    pointer-events: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  img, svg {
+    max-width: 100%;
+    display: block;
+    margin: 1em auto;
+  }
+  
+  img.small {
+    max-width: min(14rem, 100%);
+  }
+  
+  img.medium {
+    max-width: min(20rem, 100%);
+  }
+
+  .header{
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 2em 0;
+  }
+
+  .header img {
+    align-self: flex-start;
+    max-width: fit-content;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .header h1 {
+    align-self: center;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .dfn-alternatives dfn.plural::before {
+    content: "plural: ";
+  }
+  
+  .dfn-alternatives dfn.abbr::before {
+    content: "abbr: ";
+  }
+  
+  .author,
+  .date {
+    text-align: center;
+    margin: 0;
+  }
+  
+  .author a {
+    text-decoration: none;
+  }
+  
+  .term {
+    text-decoration: none;
+    border-bottom: 1px dotted #999;
+    color: inherit;
+  }
+  
+  dfn abbr {
+    text-decoration: none;
+  }
+  
+  .snippet-path {
+    text-align: right;
+    font-size: 0.8em;
+    color: #999;
+    margin: 0;
+    padding: 0.2rem 0.5rem;
+  }
+  
+  .snippet-path a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .snippet pre {
+    margin-bottom: 0;
+  }
+  
+  code, kbd {
+    padding: 0em 0.3em 0.06em 0.3em;
+    background-color: rgba(175, 184, 193, 0.2) !important;
+    border-radius: var(--border-radius);
+    word-wrap: break-word;
+  }
+  
+  kbd {
+    border: 1px solid gray;
+  }
+  
+  pre {
+    padding: 0.8rem 1rem;
+    background-color: #f6f8fa !important;
+    overflow-x: auto;
+    border-radius: var(--border-radius);
+    break-inside: avoid;
+  }
+  
+  pre code {
+    white-space: pre !important;
+    background: none !important;
+    padding: 0 !important;
+  }
+  
+  summary {
+    cursor: pointer;
+  }
+  
+  details[open] summary {
+    margin-bottom: 0.5em;
+  }
+  
+  .hljs-type {
+    color: #6f42c1;
+  }
+  
+  .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .breadcrumb ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .breadcrumb li {
+    display: inline;
+    margin: 0;
+    padding: 0;
+  }
+
+  .breadcrumb li+li:before {
+    content: "/\00a0";
+  }
+  
+  .note, .warning, .hint, .tip, .troubleshoot, .recipe, details {
+    margin: 1rem 0;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+  }
+  
+  @media screen and (max-width: 75rem) {
+    .note, .warning, .hint, .tip, .troubleshoot, .recipe, details {
+      padding: 1rem;
+    }
+  }
+  
+  div.note,
+  div.warning,
+  div.hint,
+  div.tip,
+  div.troubleshoot,
+  div.recipe {
+    padding-top: 1.2rem;
+  }
+  
+  .note > *:last-child,
+  .warning > *:last-child,
+  .hint > *:last-child,
+  .tip > *:last-child,
+  .troubleshoot > *:last-child,
+  .recipe > *:last-child,
+  details > *:last-child  {
+    margin-bottom: 0;
+  }
+  
+  div.note::before,
+  div.warning::before,
+  div.hint::before,
+  div.troubleshoot::before,
+  div.tip::before,
+  div.recipe::before,
+  summary {
+    font-weight: 600;
+    font-size: 0.8em;
+    text-transform: uppercase;
+  }
+  
+  .note {
+    background-color: rgba(100, 108, 255, 0.14);
+  }
+  
+  div.note::before {
+    content: "Note";
+  }
+  
+  div.check::before {
+    content: "Check yourself";
+  }
+  
+  .warning {
+    background-color: rgba(234, 179, 8, 0.14);
+  }
+  
+  div.warning::before {
+    content: "Warning";
+  }
+  
+  .hint {
+    background-color: rgba(234, 8, 196, 0.14);
+  }
+  
+  div.hint::before {
+    content: "Hint";
+  }
+
+  .tip {
+    background-color: rgba(57, 234, 8, 0.14);
+  }
+  
+  div.tip::before {
+    content: "Tip";
+  }
+
+  .troubleshoot {
+    background-color: rgba(234, 76, 8, 0.14);
+  }
+  
+  div.troubleshoot::before {
+    content: "Troubleshoot";
+  }
+  
+  .recipe {
+    border: #ccc solid 1px;
+  }
+  
+  div.recipe::before {
+    content: "Recipe";
+  }
+  
+  details {
+    background-color: rgba(175, 184, 193, 0.14);
+    padding-top: 1.5rem;
+  }
+  
+  .updated {
+    font-size: 0.8em;
+    font-style: italic;
+    color: #999;
+  }
+  
+  /*
+  .solution {
+    margin: 1rem -2rem;
+    padding: 2rem;
+    border: 1px solid rgb(166, 223, 252);
+    border-radius: 6px;
+    background-color: rgb(230, 246, 255);
+  }
+  
+  .solution pre {
+    background-color: white !important;
+  }*/
+  
+  .recipe h2, .recipe h3, .recipe h4 {
+    all: unset;
+  }
+
+  :is(.recipe h2, .recipe h3, .recipe h4) a::before {
+    content: none;
+  }
+
+  :is(.recipe h2, .recipe h3, .recipe h4) a {
+    content: none;
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+  }
+  
+  
+  @media screen and (max-width: 75rem) {
+    #toc {
+      display: none;
+      /* FIXME: properly display the TOC on mobile */
+    }
+    body {
+      margin: 0;
+    }
+    #container {
+      margin: 0;
+    }
+    main {
+      margin: 0;
+      padding: 1.5rem;
+    }
+    .wide {
+      margin: 0;
+    }
+  }
+  
+  @media print {
+    body {
+      margin: 0;
+      padding: 0;
+      text-align: justify;
+      hyphens: auto;
+      color: #000;
+    }
+  
+    .wide {
+      margin: 0;
+    }
+  
+    ul,
+    ol {
+      padding-left: 2em;
+    }
+  
+    summary {
+      display: none;
+    }
+  
+    header {
+      margin-bottom: 2rem;
+    }
+  
+    h1:not(.title),
+    h2,
+    h3 {
+      margin-bottom: 0.5em;
+    }
+  
+    h1:not(.title) {
+        text-transform: uppercase;
+    }
+  
+    pre {
+      margin: 0;
+      padding: 0;
+    }
+  
+    code {
+      border: none;
+      display: inline;
+      padding: 0;
+      margin: 0;
+      text-align: left;
+      background: none !important;
+    }
+  
+    pre code.hljs {
+      padding: 0 !important;
+      margin: 0.3em 0 !important;
+      background: none !important;
+      white-space: pre-wrap !important;
+    }
+  
+    header {
+      column-span: all;
+    }
+  
+    main {
+      columns: 2;
+      column-gap: 0.8cm;
+    }
+  
+    header,
+    main,
+    #bibliography {
+      max-width: none;
+    }
+  
+    table tbody tr.odd {
+      background: transparent; /* default */
+    }
+  }
+  
+  @page {
+    margin: 1.6cm;
+  }
+  
+  /* Table addition */
+  table {
+    max-width: -moz-fit-content;
+    max-width: fit-content;
+  
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+  
+    border-collapse: collapse; /* to show borders */
+  
+    /* center */
+    margin: 0 auto;
+  }
+  
+  table td,
+  table th {
+    text-align: center; /* by default */
+  }
+  
+  table > thead {
+    border-bottom: 2px solid rgba(175, 184, 193, 0.8);
+  }
+  
+  table > tbody > tr {
+    border-top: 1px solid rgba(175, 184, 193, 0.8);
+  }
+  
+  table tr,
+  table th {
+    padding: 4px 10px;
+  }
+  
+  table tr.odd {
+    background: rgba(175, 184, 193, 0.05);
+  }
+  
+  li {
+    margin-bottom: 0.5em;
+  }
+  
+  ul, ol, p {
+    margin: 0.7em 0;
+  }
+  

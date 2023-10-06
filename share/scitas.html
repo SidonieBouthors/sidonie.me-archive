@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="keywords" content="Sidonie Bouthors, cooking, programming">
+        <meta name="description" content="Personal website of Sidonie Bouthors with recipes and projects">
+        <meta name="author" content="Sidonie Bouthors">
+
+        <title>SCITAS</title>
+
+        <link href="styles/share.css" rel="stylesheet" type="text/css" media="all">
+        
+        <link rel="shortcut icon" href="img/share.ico">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" integrity="sha512-0aPQyyeZrWj9sCA46UlmWgKOP0mUipLQ6OZXu8l4IcAmD2u31EPEy9VcIMvl7SoAaKe8bLXZhYoMaE/in+gcgA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+        
+        <meta property="og:title" content="Sidonie's Share">
+        <meta property="og:description" content="A place where I share useful stuff">
+        <meta property="og:image" content="https://sidonie.me/img/share-image.jpg">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:url" content="sidonie.me/share">
+    </head>    
+    <body>
+
+    <div id="container">
+    <main>
+
+    <nav class="breadcrumb"><ol>
+    <li><a href="./index.html">Share</a></li>
+    <li>Using SCITAS</li>
+    </ol></nav>
+
+    <p class="updated">Last updated on <time datetime="2023-10-06">Friday, October 06, 2023</time></p>
+
+    <h1><a href="#scitas" id="scitas">Using SCITAS to run jobs</a></h1>
+
+    <div class="note">
+        <p>Username and passwords are all your GASPAR login info</p>
+    </div>
+    <h2><a href="#script" id="script">Script</a></h2>
+    <p>Download the <code>execute.sh</code> file from Moodle into your assignment directory</p>
+    <p>Modify the following</p>
+    <pre><code>#!/bin/bash
+#SBATCH --chdir /scratch/<span class="hljs-type">&lt;username&gt;</span>
+#SBATCH --nodes 1
+#SBATCH --ntasks 1
+#SBATCH --cpus-per-task <span class="hljs-type">1</span>
+#SBATCH --mem 1G
+
+echo STARTING AT `date`
+
+<span class="hljs-type">&lt;commands&gt;</span>
+
+echo FINISHED at `date`</code></pre>
+    <ul>
+        <li>Username : your GASPAR username</li>
+        <li>CPUs per Task : the number of CPUs used to run each command</li>
+        <li>Commands : You can put here any commands you wish to run on SCITAS, such as <code>./pi 1 100000000</code>. They will be executed one after the other.</li>
+    </ul>
+    <h2><a href="#setup" id="setup">Setup</a></h2>
+    <p>Copy all your files into SCITAS:</p>
+    <pre><code>scp -r &lt;assignment path&gt; &lt;username&gt;@helvetios.epfl.ch:~/</code></pre>
+    <details class="troubleshoot">
+        <summary>Troubleshooting</summary>
+        <p>If you get an error message such as 
+            <code>path canonicalization failed</code> 
+            you can try adding the <code>-O</code> flag after the <code>-r</code>
+        </p>
+    </details>
+    <p>SSH into SCITAS:</p>
+    <pre><code>ssh &lt;username&gt;@helvetios.epfl.ch</code></pre>
+    <p>Use <code>ls</code> &amp; <code>cd</code> to navigate into your asignment directory in SCITAS</p>
+    <pre><code>make clean</code></pre>
+    <pre><code>make all</code></pre>
+    <p>Remove files in scratch (if you&#39;ve already run some SCITAS jobs before and want to delete old output files before continuing)<strong>:</strong></p>
+    <pre><code>rm -r /scratch/&lt;username&gt;/*</code></pre>
+    <p>Copy executables into scratch:</p>
+    <pre><code>cp -- !(*.*|Makefile) /scratch/&lt;username&gt;/</code></pre>
+    <div class="note">
+        <p>There are two important directories in SCITAS :
+        <ul>
+            <li><code>/home/&lt;username&gt;</code> : this is where you are located when you SSH into SCITAS and where you copy your assignment directory</li>
+            <li><code>/scratch/&lt;username&gt;</code> : this is where your script is executed and where the output files appear</li>
+        </ul>
+    </p>
+    </div>
+    <h2><a href="#run-job" id="run-job">Running a Job</a></h2>
+    <p>Execute job (use <code>execute-reservation.sh</code> if needed):</p>
+    <pre>sbatch execute.sh</pre>
+    <p>Check if job is done (if there is a <code>slurm-&lt;job number&gt;.out</code> file here):</p>
+    <pre><code>ls /scratch/&lt;username&gt;/</code></pre>
+    <p>Check if job is in queue (if your job is stuck in queue - search in list with job number to find it):</p>
+    <pre><code>squeue</code></pre>
+    <p>Go into job output (you can write only the first part of the command and tab, it will fill in the number if it&#39;s the only job output):</p>
+    <pre><code>cat /scratch/&lt;username&gt;/slurm-&lt;job number&gt;.out</code></pre>
+    <p>To exit the SSH connection to SCITAS:</p>
+    <pre><code>exit</code></pre>
+
+    </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js" integrity="sha512-rdhY3cbXURo13l/WU9VlaRyaIYeJ/KBakckXIvJNAQde8DgpOmE+eZf7ha4vdqVjTtwQt69bD2wH2LXob/LB7Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/scala.min.js" integrity="sha512-F7HBSjTYDsAreqced8cggvF5AuB+j2TXktnLYpCrpWF2fhQJJCc5KimR3LYLs0AppTBecbPN9M9Hjf8yC2WstA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <script src="scripts.js"></script>
+
+</body>
+    
+</html>

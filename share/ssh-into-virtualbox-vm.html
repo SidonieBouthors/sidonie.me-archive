@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="keywords" content="Sidonie Bouthors, cooking, programming">
+        <meta name="description" content="Personal website of Sidonie Bouthors with recipes and projects">
+        <meta name="author" content="Sidonie Bouthors">
+
+        <title>SSH into VirtualBox VM</title>
+
+        <link href="styles/share.css" rel="stylesheet" type="text/css" media="all">
+        
+        <link rel="shortcut icon" href="img/share.ico">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" integrity="sha512-0aPQyyeZrWj9sCA46UlmWgKOP0mUipLQ6OZXu8l4IcAmD2u31EPEy9VcIMvl7SoAaKe8bLXZhYoMaE/in+gcgA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+        
+        <meta property="og:title" content="Sidonie's Share">
+        <meta property="og:description" content="A place where I share useful stuff">
+        <meta property="og:image" content="https://sidonie.me/img/share-image.jpg">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:url" content="sidonie.me/share">
+    </head>    
+    <body>
+
+    <div id="container">
+    <main>
+
+    <nav class="breadcrumb"><ol>
+        <li><a href="./index.html">Share</a></li>
+        <li>SSH into VirtualBox VM</li>
+    </ol></nav>
+
+    <p class="updated">Last updated on <time datetime="2023-10-06">Friday, October 06, 2023</time></p>
+
+    <h1><a href="#ssh-into-virtualbox-vm" id="ssh-into-virtualbox-vm">SSH into VirtualBox VM with VS Code</a></h1>
+
+    <p>Open VirtualBox and Start your VM, then open a terminal in your VM and follow the steps below</p>
+    <h2><a href="#enable-ssh" id="enable-ssh">Enable SSH on the VM</a></h2>
+    <h3><a href="#ssh-running" id="ssh-running">Make sure SSH is Running</a></h3>
+    <p>Check if SSH server is active &amp; running</p>
+    <pre><code>systemctl status ssh</code></pre>
+    <p>If not running then enable</p>
+    <pre><code>systemctl enable ssh --now</code></pre>
+    <p>If not installed then install SSH</p>
+    <pre><code>sudo apt install openssh-server</code></pre>
+    <p>Find port number used (usually 22)</p>
+    <pre><code>$ sudo ss -ntlp | grep -i ssh
+    LISTEN 0      128          0.0.0.0:<span class="hljs-type">22</span>        0.0.0.0:*    users:(("sshd",pid=787,fd=3))            
+    LISTEN 0      128             [::]:<span class="hljs-type">22</span>           [::]:*    users:(("sshd",pid=787,fd=4))</code></pre>
+
+    <h3><a href="#firewall" id="firewall">Firewall</a></h3>
+    <p>These steps may not be entirely necessary but it can avoid SSH being blocked by your firewall or other similar issue.</p>
+    <p>Install Firewalld if not available</p>
+    <pre><code>sudo apt-get install firewalld</code></pre>
+    <p>Check if Firewalld is running</p>
+    <pre><code>firewall-cmd --state</code></pre>
+    <p>If not, you can start it using</p>
+    <pre><code>systemctl start firewalld</code></pre>
+    <p>Check if SSH service is enabled in your firewall</p>
+    <pre><code>firewall-cmd --zone=public --list-services</code></pre>
+    <p>If it is not present you can add it using</p>
+    <pre><code>firewall-cmd --zone=public --add-service=ssh --permanent<br>firewall-cmd --reload</code></pre>
+    <p>If your SSH port (found previously) is not 22, manually allow that port. 
+    For example if the port is 5022, use the following commands</p>
+    <pre><code>firewall-cmd --add-port=<span class="hljs-type">5022</span>/tcp --zone=public --permanent<br>firewall-cmd --reload<br>firewall-cmd --zone=public --list-ports<br><span class="hljs-type">5022</span>/tcp</code></pre>
+    
+    <h2><a href="#ssh-settings-virtualbox-vm" id="ssh-settings-virtualbox-vm">SSH Settings on the VirtualBox VM</a></h2>
+    <p>While on your VM, open the machine settings (no need to power it off)</p>
+    <p><img src="img/ssh-into-vm_machine-settings.png" alt="Machine > Settings" class="medium"></p>
+    <p>Set your adapter to NAT (if it is not already the case)</p>
+    <p><img src="img/ssh-into-vm_network-adapter-nat.png" alt="Network > Adapter 1 > NAT" class="medium"></p>
+    <p>Click on Advanced and Port Forwarding</p>
+    <p><img src="img/ssh-into-vm_advanced-port-forwarding.png" alt="Advanced > Port Forwarding" class="medium"></p>
+    <p>Add a rule and set the port forwarding details</p>
+    <p><img src="img/ssh-into-vm_port-forwarding-rule.png" alt="Port Forwarding > Add Rule" class="medium"></p>
+    <ul>
+    <li>Name : any</li>
+    <li>Protocol : TCP (protocol used by SSH)</li>
+    <li>Host IP : empty</li>
+    <li>Host Port : any from 0-65535 (preferably above 1023)</li>
+    <li>Guest IP : empty</li>
+    <li>Guest Port : SSH port number found previously (usually 22)</li>
+    </ul>
+    <p>Refresh network configuration in the VM by turning it off and on</p>
+    <pre><code>nmcli networking off<br>nmcli networking on</code></pre>
+    <p>If nmcli is not installed, you can install it first using </p>
+    <pre><code>sudo apt install network-manager</code></pre>
+    <p>Verify your IP Address</p>
+    <pre><code>ip a</code></pre>
+    <pre><code class="language-bash">$ ip a
+    1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+        link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+        inet 127.0.0.1/8 scope host lo
+            valid_lft forever preferred_lft forever
+        inet6 ::1/128 scope host 
+            valid_lft forever preferred_lft forever
+    2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+        link/ether 08:00:27:dc:08:a9 brd ff:ff:ff:ff:ff:ff
+        inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3
+            valid_lft 80381sec preferred_lft 80381sec
+        inet6 fe80::dec4:484c:cf97:9f5c/64 scope link noprefixroute 
+            valid_lft forever preferred_lft forever
+    3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+        link/ether 02:42:a8:a1:1c:e0 brd ff:ff:ff:ff:ff:ff
+        inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+            valid_lft forever preferred_lft forever</code></pre>
+    <p>Open a terminal in your host machine (outside your VM) and verify the SSH connectivity (you can also do this using PuTTY or similar if you wish)</p>
+    <ul>
+    <li>Port number : the one you set as Host Port in the VM port forwarding settings</li>
+    <li>VM Username : your username on the VM</li>
+    <li>VM IP Address : the one you found just above</li>
+    </ul>
+    <pre><code>ssh -p &lt;port number&gt; &lt;vm username&gt;@&lt;vm IP address&gt;</code></pre>
+    This should prompt you to enter your VM password and then connect you to the VM.
+  
+    <p>If the above attempt works, you have successfully set up SSH for your VM.
+    You can now adapt this in order to SSH connect easily via VS Code rather than the command prompt or other terminal.</p>
+    <h2><a href="#ssh-from-vs-code" id="ssh-from-vs-code">SSH from VS Code</a></h2>
+    <h3><a href="#update-ssh-config" id="update-ssh-config">Updating the SSH config file</a></h3>
+    <p>First, find your .ssh folder. It is usually at C:\Users\&lt;username&gt;\.ssh</p>
+    <p>Then open the config file inside the .ssh folder, if it is already present. Otherwise, create it.</p>
+    <div class="warning">
+        <p>The name of this file should be exactly <b>config</b>, with no extension</p>
+    </div>
+    <p>Open the config file in a text editor and write the following, then save.</p>
+    <pre><code>Host &lt;host name&gt;
+    HostName <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>
+    User &lt;username&gt;
+    Port <span class="hljs-number">3000</span></code></pre>
+    <ul>
+    <li>Host : any name for your VM (you will use this to SSH connect to your VM later)</li>
+    <li>HostName : 127.0.0.1 (this is the loopback IP address)</li>
+    <li>User : your VM username</li>
+    <li>Port : the one you set as Host Port in the VM port forwarding settings</li>
+    </ul>
+    <p>You have succesfully created an alias for this remote connection !</p>
+    <div class="tip">
+        <p>With the config file set up, you can also now SSH into your VM from any terminal on your host machine using just the host name you have set previously !</p>
+        <p>You can now write <code class="bash">ssh &lt;host name&gt;</code> instead of <code class="bash">ssh -p &lt;port number&gt; &lt;vm username&gt;@&lt;vm IP address&gt;</code></p>
+    </div>
+    <h3><a href="#connecting-vs-code" id="connecting-vs-code">Connecting through VS Code</a></h3>
+    <p>Open VS Code and press CTRL+Shift+P or View &gt; Command Palette</p>
+    <p><img src="img/ssh-into-vm_view-command-palette.png" alt="View > Command Palette" class="medium"></p>
+    <p>In the search bar that appears, search for Remote-SSH: Connect to Host...</p>
+    <p><img src="img/ssh-into-vm_remote-ssh-connect-host.png" alt="Remote-SSH: Connect to Host..." class="medium"></p>
+    <p>A list of all the Hosts in your config file should appear. Select your VM in the list. You will be prompted to enter your VM password, and will get connected via SSH to your VM.</p>
+    <p>You can verify you are indeed connected to your VM by checking if you have this kind of indication saying <code>SSH: &lt;host name&gt;</code> in the bottom left of your VS Code window.</p>
+    <p><img src="img/ssh-into-vm_vs-code-ssh-indication.png" alt="SSH: host name" class="medium"></p>
+    <p>Now that you are connected, when you select Open Folder in VS Code you will be able to navigate through your VM filesystem, and when you open a Terminal in VS Code, it will be a terminal in your VM.</p>
+    <div class="note">
+        <p>Your VM has to be running in order for you to be able to be connected to it via SSH. Any time you wish to connect this way through VS Code, simply open VirtualBox and start your VM, then you can connect to it as long as it remains running.</p>
+        <p><img src="img/ssh-into-vm_vm-running.png" alt="VM Running" class="medium"></p>
+    </div>
+
+    </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js" integrity="sha512-rdhY3cbXURo13l/WU9VlaRyaIYeJ/KBakckXIvJNAQde8DgpOmE+eZf7ha4vdqVjTtwQt69bD2wH2LXob/LB7Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/scala.min.js" integrity="sha512-F7HBSjTYDsAreqced8cggvF5AuB+j2TXktnLYpCrpWF2fhQJJCc5KimR3LYLs0AppTBecbPN9M9Hjf8yC2WstA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <script src="scripts.js"></script>
+
+</body>
+    
+</html>

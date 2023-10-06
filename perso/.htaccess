@@ -1,0 +1,7 @@
+AuthType Basic
+AuthName "Protected Site"
+AuthUserFile /.htpasswd
+
+<Files "test.html">
+require valid-user
+</Files>
