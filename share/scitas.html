@@ -34,7 +34,7 @@
     <li>Using SCITAS</li>
     </ol></nav>
 
-    <p class="updated">Last updated on <time datetime="2023-10-06">Friday, October 06, 2023</time></p>
+    <p class="updated">Last updated on <time datetime="2023-10-06">Saturday, November 4, 2023</time></p>
 
     <h1><a href="#scitas" id="scitas">Using SCITAS to run jobs</a></h1>
 
@@ -49,7 +49,7 @@
 #SBATCH --nodes 1
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task <span class="hljs-type">1</span>
-#SBATCH --mem 1G
+#SBATCH --mem <span class="hljs-type">1G</span>
 
 echo STARTING AT `date`
 
@@ -60,7 +60,9 @@ echo FINISHED at `date`</code></pre>
         <li>Username : your GASPAR username</li>
         <li>CPUs per Task : the number of CPUs used to run each command</li>
         <li>Commands : You can put here any commands you wish to run on SCITAS, such as <code>./pi 1 100000000</code>. They will be executed one after the other.</li>
+        <li>Memory : If you need a larger amount of RAM to execute your script, specify how much memory you need here.</li>
     </ul>
+
     <h2><a href="#setup" id="setup">Setup</a></h2>
     <p>Copy all your files into SCITAS:</p>
     <pre><code>scp -r &lt;assignment path&gt; &lt;username&gt;@helvetios.epfl.ch:~/</code></pre>
@@ -97,8 +99,81 @@ echo FINISHED at `date`</code></pre>
     <pre><code>squeue</code></pre>
     <p>Go into job output (you can write only the first part of the command and tab, it will fill in the number if it&#39;s the only job output):</p>
     <pre><code>cat /scratch/&lt;username&gt;/slurm-&lt;job number&gt;.out</code></pre>
+    <div class="warning">
+        <p>Using this command before your script has finished running will show only a partial output. Wait a little longer for the full output to be ready.</p>
+    </div>
+    
     <p>To exit the SSH connection to SCITAS:</p>
     <pre><code>exit</code></pre>
+
+    <h2><a href="#advanced-script" id="advanced-script">More Advanced Script</a></h2>
+
+    <p>In my previous example script, you can replace</p>
+    <pre><code>#SBATCH --chdir /scratch/&lt;username&gt;</code></pre>
+    <p>with</p> 
+    <pre><code>#SBATCH --output /scratch/%u/slurm-%j.out</code></pre> 
+    <p>This avoids having to copy your executables to <code>/scratch/&lt;username&gt;</code>.
+    Instead of changing the working directory of your script, you are only changing the output file.</p></p>
+    <div class="note">
+    <p>Here is the difference between the two :</p>
+    <ul>
+        <li><pre><code>#SBATCH --chdir /scratch/&lt;username&gt;</code></pre>
+            All executables need to be in <code>/scratch/&lt;username&gt;</code> so that they are in the 
+            script's working directory. The output file will also appear in this directory.
+        </li>
+        <li><pre><code>#SBATCH --output /scratch/%u/slurm-%j.out</code></pre>
+            Your executables need to be in the current directory, but you will still need to go to <code>/scratch/&lt;username&gt;</code> to find the output file.</li>
+    </ul>
+    </div>
+
+    <p>For more information on <code>#SBATCH</code>, see <a href="https://slurm.schedmd.com/sbatch.html" target="_blank">the Slurm SBATCH documentation</a>, or
+    <a href="https://slurm.schedmd.com/sbatch.html#SECTION_%3CB%3Efilename-pattern%3C/B%3E" target="_blank">the filename patterns</a> in particular for patterns like <code>%u</code> or <code>%j</code>.</p>
+
+    <h2><a href="#ssh-vscode" id="ssh-vscode">SSH with VS Code</a></h2>
+    <p>VS Code offers an easier way to connect via SSH : once connected you can access all your folders and file 
+        through VS Code's file explorer, and you can modify files with the editor (as if you were on your own PC!).</p>
+    <p>I'm also gonna cover adding an SSH Key to SCITAS, which can make your life easier regardless of wether you want to use VS Code or not.</p>
+    <h3><a href="#setup-remote-host" id="setup-remote-host">Setting up a Remote Host</a></h3>
+    <p>This means you could simply code your entire assignment in SCITAS ! This is quite useful, especially if you are 
+        currently using a Linux VM and then transferring to SCITAS for tests.</p>
+    <p>To do this, find your .ssh folder on your PC. It is usually at <code>C:\Users\&lt;username&gt;\.ssh</code> on Windows or <code>/home/&lt;username&gt;/.ssh</code> on Linux.</p>
+    <p>Then open the config file inside the .ssh folder, if it is already present. Otherwise, create it.</p>
+    <div class="warning">
+        <p>The name of this file should be exactly <b>config</b>, with no extension</p>
+    </div>
+    <p>Open the config file in a text editor and write the following, then save.</p>
+    <pre><code>Host &lt;host name&gt;
+    HostName helvetios.epfl.ch
+    User &lt;username&gt;</code></pre>
+    <ul>
+    <li>Host : any name for this host (for example SCITAS)</li>
+    <li>HostName : <code>helvetios.epfl.ch</code></li>
+    <li>User : your GASPAR username</li>
+    </ul>
+    <p>You have succesfully created an alias for this remote connection !</p>
+    <div class="tip">
+        <p>With the config file set up, you can also now SSH into SCITAS from any terminal on your host machine using just the host name you have set previously !</p>
+        <p>You can now write <code class="bash">ssh &lt;host name&gt;</code> instead of <code class="bash">ssh &lt;username&gt;@helvetios.epfl.ch</code></p>
+    </div>
+    <h3><a href="#connecting-vs-code" id="connecting-vs-code">Connecting through VS Code</a></h3>
+    <p>Open VS Code and press CTRL+Shift+P or View &gt; Command Palette</p>
+    <p><img src="img/ssh-into-vm_view-command-palette.png" alt="View > Command Palette" class="medium"></p>
+    <p>In the search bar that appears, search for Remote-SSH: Connect to Host...</p>
+    <p><img src="img/ssh-into-vm_remote-ssh-connect-host.png" alt="Remote-SSH: Connect to Host..." class="medium"></p>
+    <p>A list of all the Hosts in your config file should appear. Select SCITAS in the list. You will be prompted to enter your GASPAR password, and will get connected via SSH to SCITAS.</p>
+    <p>You can verify you are indeed connected to SCITAS by checking if you have a kind of indication saying <code>SSH: &lt;host name&gt;</code> in the bottom left of your VS Code window.</p>
+    <p>Now that you are connected, when you select Open Folder in VS Code you will be able to navigate through your SCITAS filesystem, and when you open a Terminal in VS Code, it will be a terminal in SCITAS !</p>
+
+    <h3><a href="#ssh-key" id="ssh-key">Adding an SSH Key</a></h3>
+    <p>Currently you have to enter your GASPAR password whenever connecting to SCITAS, whether in the terminal or via VS Code. You can avoid this by using an SSH Key !</p>
+    <p>If you have never generated an SSH Key on your PC, generate a new one using the following command :</p>
+    <pre><code>ssh-keygen -t ed25519 -C "your_email@example.com"</code></pre>
+    <p>Find your public key. It should be located in the same .ssh folder as previously (<code>C:\Users\&lt;username&gt;\.ssh</code> on Windows or <code>/home/&lt;username&gt;/.ssh</code> on Linux).
+        Open the file called <code>id_ed25519.pub</code> in a text editor and copy it's content.
+    </p>
+    <p>Connect to SCITAS via SSH using a terminal or using VS Code. In your <code>/home/&lt;username&gt;</code> folder, create a folder called <code>.ssh</code>, and inside this folder 
+        create a file called <code>authorized_keys</code>. In this file, paste your SSH public key.</p>
+    <p>You have now added your public key to SCITAS ! You should now be able to connect to SCITAS from your computer without using your GASPAR password.</p>
 
     </main>
     </div>

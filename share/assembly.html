@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="keywords" content="Sidonie Bouthors, cooking, programming">
+        <meta name="description" content="Personal website of Sidonie Bouthors with recipes and projects">
+        <meta name="author" content="Sidonie Bouthors">
+
+        <title>Introduction to Assembly</title>
+
+        <link href="styles/share.css" rel="stylesheet" type="text/css" media="all">
+        
+        <link rel="shortcut icon" href="img/share.ico">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" integrity="sha512-0aPQyyeZrWj9sCA46UlmWgKOP0mUipLQ6OZXu8l4IcAmD2u31EPEy9VcIMvl7SoAaKe8bLXZhYoMaE/in+gcgA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+        
+        <meta property="og:title" content="Sidonie's Share">
+        <meta property="og:description" content="A place where I share useful stuff">
+        <meta property="og:image" content="https://sidonie.me/img/share-image.jpg">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:url" content="sidonie.me/share">
+    </head>    
+    <body>
+
+    <div id="container">
+    <main>
+
+    <nav class="breadcrumb"><ol>
+    <li><a href="./index.html">Share</a></li>
+    <li>Assembly</li>
+    </ol></nav>
+
+    <p class="updated">Last updated on <time datetime="2023-10-06">Friday, October 06, 2023</time></p>
+
+    <h1><a href="#scitas" id="scitas">Introduction to Assembly</a></h1>
+
+    <div class="note">
+        <p>This tutorial only covers some basic concepts of assembly. The syntax and particularities may vary depending on the assembly language you use.</p>
+    </div>
+    <h2><a href="#registers" id="registers">Registers</a></h2>
+    <p>Registers are the equivalent of variables in assembly. Here are some register types you may use :</p>
+    <ul>
+        <li><code>zero</code> always has the value 0</li>
+        <li><code>v0</code> is where integer functions put their return value</li>
+        <li><code>a0-a3</code> are used to pass arguments to functions</li>
+        <li><code>t1-t7</code> are temporary registers, values are not preserved across function calls</li>
+        <li><code>s1-s7</code> are saved registers, values are preserved across function calls</li>
+        <li><code>sp</code> is the stack pointer</li>
+        <li><code>ra</code> is the return address. It is automatically set when you call a function</li>
+    </ul>
+
+    <h3><a href="#saved-registers" id="saved-registers">Saved Registers</a></h3>
+    <p>When you call a function from somewhere in your program in assembly, 
+        this simply goes to that part of your program, executes the instructions, 
+        and eventually returns to where the function was called. However, 
+        there is no notion of global or local variable. This means that a function 
+        may modify all the temporary registers. If you need to keep track of some information
+        even after a function call, you will need to use <strong>saved registers</strong>.</p>
+    <p>Saved registers must never be overwritten : before using them, you must push all of 
+        the values onto the stack, and then restore them into the correct registers once 
+        you have used them. If all processes follow this rule, function calls will never overwrite 
+        these registers' values : they will always be restored before the function returns.
+    </p>
+    <p>There are two methods for saving registers : caller saved and callee saved. Caller saved 
+        means that before calling a function, the caller saves the variables, and when the function returns
+        the caller restores the values. Usually, it is recommended to use callee saved instead : each function
+        takes care of saving and restoring the registers it uses. This means you don't need to worry 
+        about saving when calling a function, but you do need to remember to save and restore when you are creating a function.
+    </p>
+
+    <pre><code class="language-mips hljs">main:
+    addi t1, zero, 1 ; value of t1 is 1
+    call func
+func:
+    
+    </code></pre>
+
+    <h2><a href="#for-loop" id="for-loop">For Loop</a></h2>
+
+    </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js" integrity="sha512-rdhY3cbXURo13l/WU9VlaRyaIYeJ/KBakckXIvJNAQde8DgpOmE+eZf7ha4vdqVjTtwQt69bD2wH2LXob/LB7Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/scala.min.js" integrity="sha512-F7HBSjTYDsAreqced8cggvF5AuB+j2TXktnLYpCrpWF2fhQJJCc5KimR3LYLs0AppTBecbPN9M9Hjf8yC2WstA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/mipsasm.min.js" integrity="sha512-eDFYcNX4xELRnYpSQ/i8aJLYrzRR9Wgjjn/sL6z0CPaTsjKmgKa88MR6zN67xJuRNIK1Wr/WLX9am41yiWfw6A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <script src="scripts.js"></script>
+
+</body>
+    
+</html>

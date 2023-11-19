@@ -91,7 +91,7 @@
     <pre><code>sudo apt install network-manager</code></pre>
     <p>Verify your IP Address</p>
     <pre><code>ip a</code></pre>
-    <pre><code class="language-bash">$ ip a
+    <pre><code>$ ip a
     1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
         link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
         inet 127.0.0.1/8 scope host lo
@@ -100,7 +100,7 @@
             valid_lft forever preferred_lft forever
     2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
         link/ether 08:00:27:dc:08:a9 brd ff:ff:ff:ff:ff:ff
-        inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3
+        inet <span class=hljs-type>10.0.2.15/24</span> brd 10.0.2.255 scope global dynamic noprefixroute enp0s3
             valid_lft 80381sec preferred_lft 80381sec
         inet6 fe80::dec4:484c:cf97:9f5c/64 scope link noprefixroute 
             valid_lft forever preferred_lft forever
@@ -108,13 +108,14 @@
         link/ether 02:42:a8:a1:1c:e0 brd ff:ff:ff:ff:ff:ff
         inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
             valid_lft forever preferred_lft forever</code></pre>
+    <p>For a NAT network, you will always get <code>10.0.2.15/24</code> IP address, so this means our configuration is complete.</p>
     <p>Open a terminal in your host machine (outside your VM) and verify the SSH connectivity (you can also do this using PuTTY or similar if you wish)</p>
     <ul>
     <li>Port number : the one you set as Host Port in the VM port forwarding settings</li>
     <li>VM Username : your username on the VM</li>
-    <li>VM IP Address : the one you found just above</li>
+    <li>VM IP Address : <code>127.0.0.1</code> (the loopback IP address)</li>
     </ul>
-    <pre><code>ssh -p &lt;port number&gt; &lt;vm username&gt;@&lt;vm IP address&gt;</code></pre>
+    <pre><code>ssh -p &lt;port number&gt; &lt;vm username&gt;@<span class="hljs-number">127.0.0.1</span></code></pre>
     This should prompt you to enter your VM password and then connect you to the VM.
   
     <p>If the above attempt works, you have successfully set up SSH for your VM.
@@ -128,12 +129,12 @@
     </div>
     <p>Open the config file in a text editor and write the following, then save.</p>
     <pre><code>Host &lt;host name&gt;
-    HostName <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>
+    HostName <span class="hljs-number">127.0.0.1</span>
     User &lt;username&gt;
     Port <span class="hljs-number">3000</span></code></pre>
     <ul>
     <li>Host : any name for your VM (you will use this to SSH connect to your VM later)</li>
-    <li>HostName : 127.0.0.1 (this is the loopback IP address)</li>
+    <li>HostName : <code>127.0.0.1</code> (the loopback IP address)</li>
     <li>User : your VM username</li>
     <li>Port : the one you set as Host Port in the VM port forwarding settings</li>
     </ul>
@@ -155,6 +156,18 @@
         <p>Your VM has to be running in order for you to be able to be connected to it via SSH. Any time you wish to connect this way through VS Code, simply open VirtualBox and start your VM, then you can connect to it as long as it remains running.</p>
         <p><img src="img/ssh-into-vm_vm-running.png" alt="VM Running" class="medium"></p>
     </div>
+
+    <h3><a href="#ssh-key" id="ssh-key">Adding an SSH Key</a></h3>
+    <p>Currently you have to enter your VM password whenever connecting to your VM, whether in the terminal or via VS Code. You can avoid this by using an SSH Key !</p>
+    <p>If you have never generated an SSH Key on your PC, generate a new one using the following command :</p>
+    <pre><code>ssh-keygen -t ed25519 -C "your_email@example.com"</code></pre>
+    <p>Find your public key. It should be located in the same .ssh folder as previously (<code>C:\Users\&lt;username&gt;\.ssh</code> on Windows or <code>/home/&lt;username&gt;/.ssh</code> on Linux).
+        Open the file called <code>id_ed25519.pub</code> in a text editor and copy it's content.
+    </p>
+    <p>Connect to your VM via SSH using VS Code. In your <code>/home/&lt;username&gt;</code> folder, create a folder called <code>.ssh</code>, and inside this folder 
+        create a file called <code>authorized_keys</code>. In this file, paste your SSH public key.</p>
+    <p>You have now added your public key to your VM ! You should now be able to connect to  your VM from your computer without using your password.</p>
+
 
     </main>
     </div>
