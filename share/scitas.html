@@ -34,7 +34,7 @@
     <li>Using SCITAS</li>
     </ol></nav>
 
-    <p class="updated">Last updated on <time datetime="2023-10-06">Saturday, November 4, 2023</time></p>
+    <p class="updated">Last updated on <time datetime="2023-11-22">Wednesday, November 22, 2023</time></p>
 
     <h1><a href="#scitas" id="scitas">Using SCITAS to run jobs</a></h1>
 
@@ -59,9 +59,14 @@ echo FINISHED at `date`</code></pre>
     <ul>
         <li>Username : your GASPAR username</li>
         <li>CPUs per Task : the number of CPUs used to run each command</li>
-        <li>Commands : You can put here any commands you wish to run on SCITAS, such as <code>./pi 1 100000000</code>. They will be executed one after the other.</li>
         <li>Memory : If you need a larger amount of RAM to execute your script, specify how much memory you need here.</li>
+        <li>Commands : You can put here any commands you wish to run on SCITAS, such as <code>./pi 1 100000000</code>. They will be executed one after the other.</li>
     </ul>
+
+    <div class="tip">
+        <p>You can put <code>%u</code> instead of your username so that your script can be used easily by anyone.</p>
+        <p>Check out the <a href="#advanced-script">More Advanced Script</a> section for more optimizations!</p>
+    </div>
 
     <h2><a href="#setup" id="setup">Setup</a></h2>
     <p>Copy all your files into SCITAS:</p>
@@ -75,7 +80,7 @@ echo FINISHED at `date`</code></pre>
     </details>
     <p>SSH into SCITAS:</p>
     <pre><code>ssh &lt;username&gt;@helvetios.epfl.ch</code></pre>
-    <p>Use <code>ls</code> &amp; <code>cd</code> to navigate into your asignment directory in SCITAS</p>
+    <p>Use <code>ls</code> &amp; <code>cd</code> to navigate into your assignment directory in SCITAS</p>
     <pre><code>make clean</code></pre>
     <pre><code>make all</code></pre>
     <p>Remove files in scratch (if you&#39;ve already run some SCITAS jobs before and want to delete old output files before continuing)<strong>:</strong></p>
@@ -106,28 +111,48 @@ echo FINISHED at `date`</code></pre>
     <p>To exit the SSH connection to SCITAS:</p>
     <pre><code>exit</code></pre>
 
+    <h2><a href="#cancel-job" id="cancel-job">Cancelling a Job</a></h2>
+    <p>Running <code>sbatch</code> repeatedly overburdens the workload manager and makes execution and waiting times longer for everyone !
+    To avoid zombie jobs running in the background, it is important to check for jobs that are stuck in an infinite loop, and to delete them.</p>
+
+    <p>To see the list of all queuing and executing jobs, you can use the following :</p>
+    <pre><code>squeue --account="cs307" --format="%.7i %.32j %.10u %.10M %T"</code></pre>
+
+    <p>By default jobs have a time slice of 3 days, so a job that does not terminate
+        will use up ressources needlesly for 72h if we don't intervene! If you see any 
+        of your own jobs in the queue above,
+        that has been executing for a large amount of time needlessly, you can cancel it 
+        like this :
+    </p>
+
+    <pre><code>scancel &lt;job number&gt;</code></pre>
+
     <h2><a href="#advanced-script" id="advanced-script">More Advanced Script</a></h2>
 
-    <p>In my previous example script, you can replace</p>
+    <p>In the default script, you can replace</p>
     <pre><code>#SBATCH --chdir /scratch/&lt;username&gt;</code></pre>
-    <p>with</p> 
+    <p>with different variants, depending on where you want to place your executables and where you want your output to appear.</p>
+    <p>The default script uses <code>--chdir</code>, which changes your directory to the one specified <strong>before</strong> executing. 
+        This means your executables need to be in this specified directory, and your output file will appear there as well. </p>
+    <p>You can use <code>--output</code> instead if you want to keep your executables in the current directory,
+    but have your output file be created somewhere else (this can avoid you having to copy executables to scratch before running).</p> 
+    <p>You can also use various patterns in your directory path, such as <code>%u</code> for
+    your username and <code>%j</code> for your batch job number.</p>
+    <p>Here is an example of using all of these together:</p>
     <pre><code>#SBATCH --output /scratch/%u/slurm-%j.out</code></pre> 
-    <p>This avoids having to copy your executables to <code>/scratch/&lt;username&gt;</code>.
-    Instead of changing the working directory of your script, you are only changing the output file.</p></p>
-    <div class="note">
-    <p>Here is the difference between the two :</p>
-    <ul>
-        <li><pre><code>#SBATCH --chdir /scratch/&lt;username&gt;</code></pre>
-            All executables need to be in <code>/scratch/&lt;username&gt;</code> so that they are in the 
-            script's working directory. The output file will also appear in this directory.
-        </li>
-        <li><pre><code>#SBATCH --output /scratch/%u/slurm-%j.out</code></pre>
-            Your executables need to be in the current directory, but you will still need to go to <code>/scratch/&lt;username&gt;</code> to find the output file.</li>
-    </ul>
+    
+    <div class="tip">
+    <p>I personally use the following :</p>
+    <pre><code>#SBATCH --output ./output/slurm-%j.out</code></pre>
+    <p>This means I don't actually use <code>scratch</code> at all : I run my job 
+    from my working directory where all my executables are already located, and my
+    output files are created in a directory called <code>output</code>, within my current directory.</p>
     </div>
 
+    <div class="note">
     <p>For more information on <code>#SBATCH</code>, see <a href="https://slurm.schedmd.com/sbatch.html" target="_blank">the Slurm SBATCH documentation</a>, or
-    <a href="https://slurm.schedmd.com/sbatch.html#SECTION_%3CB%3Efilename-pattern%3C/B%3E" target="_blank">the filename patterns</a> in particular for patterns like <code>%u</code> or <code>%j</code>.</p>
+    <a href="https://slurm.schedmd.com/sbatch.html#SECTION_%3CB%3Efilename-pattern%3C/B%3E" target="_blank">the filename patterns</a> in particular for other patterns like <code>%u</code> or <code>%j</code>.</p>
+    </div>
 
     <h2><a href="#ssh-vscode" id="ssh-vscode">SSH with VS Code</a></h2>
     <p>VS Code offers an easier way to connect via SSH : once connected you can access all your folders and file 
@@ -156,6 +181,8 @@ echo FINISHED at `date`</code></pre>
         <p>You can now write <code class="bash">ssh &lt;host name&gt;</code> instead of <code class="bash">ssh &lt;username&gt;@helvetios.epfl.ch</code></p>
     </div>
     <h3><a href="#connecting-vs-code" id="connecting-vs-code">Connecting through VS Code</a></h3>
+    <p>The first step is to install the following extension :</p>
+    <p><img src="img/ssh-into-vm_extension.png" class="medium"></p>
     <p>Open VS Code and press CTRL+Shift+P or View &gt; Command Palette</p>
     <p><img src="img/ssh-into-vm_view-command-palette.png" alt="View > Command Palette" class="medium"></p>
     <p>In the search bar that appears, search for Remote-SSH: Connect to Host...</p>

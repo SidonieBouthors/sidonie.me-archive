@@ -155,6 +155,10 @@
     max-width: min(20rem, 100%);
   }
 
+  img.align-left {
+    margin: 1em 0;
+  }
+
   .header{
     overflow: auto;
     display: flex;
@@ -279,14 +283,14 @@
     content: "/\00a0";
   }
   
-  .note, .warning, .hint, .tip, .troubleshoot, .recipe, details {
+  .note, .warning, .hint, .tip, .troubleshoot, .recipe, details, .example {
     margin: 1rem 0;
     padding: 1.5rem;
     border-radius: var(--border-radius);
   }
   
   @media screen and (max-width: 75rem) {
-    .note, .warning, .hint, .tip, .troubleshoot, .recipe, details {
+    .note, .warning, .hint, .tip, .troubleshoot, .recipe, details, .example {
       padding: 1rem;
     }
   }
@@ -296,7 +300,8 @@
   div.hint,
   div.tip,
   div.troubleshoot,
-  div.recipe {
+  div.recipe,
+  div.example {
     padding-top: 1.2rem;
   }
   
@@ -306,7 +311,8 @@
   .tip > *:last-child,
   .troubleshoot > *:last-child,
   .recipe > *:last-child,
-  details > *:last-child  {
+  details > *:last-child,
+  .example > *:last-child {
     margin-bottom: 0;
   }
   
@@ -316,6 +322,7 @@
   div.troubleshoot::before,
   div.tip::before,
   div.recipe::before,
+  div.example::before,
   summary {
     font-weight: 600;
     font-size: 0.8em;
@@ -372,6 +379,14 @@
   
   div.recipe::before {
     content: "Recipe";
+  }
+
+  .example {
+    background-color: rgba(0, 94, 157, 0.14);
+  }
+  
+  div.example::before {
+    content: "Example";
   }
   
   details {
@@ -435,6 +450,9 @@
   }
   
   @media print {
+    #toc {
+      display: none;
+    }
     body {
       margin: 0;
       padding: 0;
@@ -445,6 +463,14 @@
   
     .wide {
       margin: 0;
+    }
+
+    #container {
+      margin: 0 40px;
+    }
+
+    .breadcrumb, .updated {
+      display: none;
     }
   
     ul,
@@ -470,10 +496,10 @@
         text-transform: uppercase;
     }
   
-    pre {
+    /*pre {
       margin: 0;
       padding: 0;
-    }
+    }*/
   
     code {
       border: none;
@@ -495,10 +521,10 @@
       column-span: all;
     }
   
-    main {
+    /*main {
       columns: 2;
       column-gap: 0.8cm;
-    }
+    }*/
   
     header,
     main,
@@ -509,6 +535,11 @@
     table tbody tr.odd {
       background: transparent; /* default */
     }
+    
+    main::before {
+      content: "https://sidonie.me/share";
+    }
+
   }
   
   @page {
@@ -524,15 +555,15 @@
     display: block;
     white-space: nowrap;
   
-    border-collapse: collapse; /* to show borders */
+    /*border-collapse: collapse; /* to show borders */
   
     /* center */
-    margin: 0 auto;
+    /*margin: 0 auto;*/
   }
   
   table td,
   table th {
-    text-align: center; /* by default */
+    text-align: left; /* by default */
   }
   
   table > thead {
@@ -546,6 +577,10 @@
   table tr,
   table th {
     padding: 4px 10px;
+  }
+
+  table td {
+    padding: 0 .5em;
   }
   
   table tr.odd {

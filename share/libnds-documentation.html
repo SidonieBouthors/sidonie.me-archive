@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="keywords" content="Sidonie Bouthors, cooking, programming">
+        <meta name="description" content="Personal website of Sidonie Bouthors with recipes and projects">
+        <meta name="author" content="Sidonie Bouthors">
+
+        <title>LibNDS Docs</title>
+
+        <link href="styles/share.css" rel="stylesheet" type="text/css" media="all">
+        
+        <link rel="shortcut icon" href="img/share.ico">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" integrity="sha512-0aPQyyeZrWj9sCA46UlmWgKOP0mUipLQ6OZXu8l4IcAmD2u31EPEy9VcIMvl7SoAaKe8bLXZhYoMaE/in+gcgA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+        
+        <meta property="og:title" content="Sidonie's Share">
+        <meta property="og:description" content="A place where I share useful stuff">
+        <meta property="og:image" content="https://sidonie.me/img/share-image.jpg">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:url" content="sidonie.me/share">
+    </head>    
+    <body>
+
+    <div id="container">
+    <main>
+
+    <nav class="breadcrumb"><ol>
+    <li><a href="./index.html">Share</a></li>
+    <li>LibNDS Documentation</li>
+    </ol></nav>
+
+    <p class="updated">Last updated on <time datetime="2023-11-20">Monday, November 20, 2023</time></p>
+
+    <h1><a href="#general" id="general">LibNDS Docs</a></h1>
+
+    <div class="note">
+        <p>This documentation is a simplified version adapted to the content of EPFL's
+            <a target="_blank" href=https://edu.epfl.ch/coursebook/en/microprogrammed-embedded-systems-EE-310>EE-310 Course</a>.
+            For more details or advanced documentation, check out the official <a target="_blank" href="https://libnds.devkitpro.org/">LibNDS Documentation</a>.
+        </p>
+    </div>
+
+    <h2><a href="#io-peripheral" id="io-peripheral">I/O & Peripheral Devices</a></h2>
+    <img src="img/nds/nds-arm-periphs.svg">
+    <p>Two 32-bit ARM cores manage the I/O and peripherals on the NDS, each connected to
+        different peripherals. There are two basic mechanisms for I/O subystem syncronization :
+        programmed I/O with active waiting response, and I/O interrupts.
+    </p>
+
+    <h3><a href="#io-interrupt" id="io-interrupt">Interrupts</a></h3>
+    
+    <p>Initialize interrupts subsystem</p>
+    <pre><code>void irqInit(); </code></pre>
+    <p>This is the usual way to initialize peripherals (except when using sound).</p>
+    <div class="warning">
+        <p>This disables VBLANK interrupts, that are activated by default.</p>
+    </div>
+
+    <p>Specify the handler to use for the given interrupt </p> 
+    <pre><code>void irqSet(IRQ_MASK irq, VoidFn handler)</code></pre>
+
+    <p>Remove the handler associated with the interrupt </p> 
+    <pre><code>void irqClear(IRQ_MASK irq)</code></pre>
+
+    <p>Allow the given interrupt to occur </p>
+    <pre><code>void irqEnable(uint32 irq)</code></pre> 
+  
+    <p>Prevent the given interrupt from occurring</p>
+    <pre><code>void irqDisable(uint32 irq)</code></pre> 
+
+    <h3><a href="#io-timer" id="io-timer">Timers</a></h3>
+
+    <p>Libnds provides several macros to deal with timers:</p>
+
+    <strong>Timer CR</strong>
+
+    <p>Return a de-referenced pointer to the timer control register x (0 to 3):</p>
+    <pre><code>TIMER_CR(x) or TIMERx_CR</code></pre>
+
+    <p>Enable the timer:</p>
+    <pre><code> TIMER_ENABLE </code></pre>
+
+    <p>Timer will count at (33.514 / VALUE) MHz, 
+        with VALUE = 1, 64, 256, or 1024:</p>
+    <pre><code>TIMER_DIV_VALUE</code></pre>
+
+    <p>Request interrupt on overflow:</p>
+    <pre><code>TIMER_IRQ_REQ</code></pre>
+
+    <strong>Timer Data</strong>
+    <p>Return a de-referenced pointer to the data register for timer x (0 to 3):</p>
+    <pre><code>TIMER_DATA(x) or TIMERx_DATA</code></pre>
+
+    <p>Set up the register value to start and overflow each 1/freq second, 
+        with VALUE = 64, 256, or 1024 (if no VALUE specified, 1):</p>
+    <pre><code>TIMER_FREQ[_VALUE](freq)</code></pre>
+
+    <p>To choose the divider to use depending on the actual
+        timer frequency we want, we ideally use the smallest possible 
+        value in the table below that satisfies our constraints.
+    </p>
+    <table>
+        <tr>
+            <th>Divider</th>
+            <th>Max Time/Cycle</th>
+            <th>Min Freq</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>1.955 ms (most precise)</td>
+            <td>510 Hz</td>
+        </tr>
+        <tr>
+            <td>64</td>
+            <td>125.151 ms</td>
+            <td>8 Hz</td>
+        </tr>
+        <tr>
+            <td>256</td>
+            <td>500.603 ms</td>
+            <td>2 Hz</td>
+        </tr>
+        <tr>
+            <td>1024</td>
+            <td>2.002 s (least precise)</td>
+            <td>0.5 Hz</td>
+        </tr>
+    </table>
+
+    <div class="example">
+        <pre><code>int frequency = 20;
+TIMER0_CR = TIMER_DIV_64 | TIMER_ENABLE | TIMER_IRQ_REQ;
+TIMER0_DATA = TIMER_FREQ_64(frequency);</code></pre>
+        <p>To use interrupts:</p>
+        <pre><code>irqSet(IRQ_TIMER0, timer_isr);
+irqEnable(IRQ_TIMER0);</code></pre>
+    </div>
+
+    <h2><a href="#graphics" id="graphics">Graphics</a></h2>
+
+    <img src="img/nds/nds-graphics-map.svg">
+
+    <h3><a href="#graphics-config" id="graphics-config">Configurations</a></h3>
+    <h4><a href="#graphics-power-manag" id="graphics-power-manag">Power Manager</a></h4>
+    <p>Control register for powering up I/O NDS devices: <code>REG_POWERCNT</code></p>
+    <img src="img/nds/nds-reg_powercnt.svg">
+    <p>LCD and engines <strong>activated by default</strong> during the boot-up process.
+    This means we usually won't need to manually set configurations for the power manager.</p>
+    <p>It is possible to enable / disable them manually to save power at run-time.</p>
+    <div class="example">
+        <p>Activation : </p>
+        <pre><code>REG_POWERCNT = POWER_LCD | POWER_2D_A;</code></pre>
+        <p>Deactivation : </p>
+        <pre><code>REG_POWERCNT &= ~(POWER_LCD) & ~(POWER_2D_A);</code></pre>
+    </div>
+    
+    <h4><a href="#graphics-vram" id="graphics-vram">Video Memory</a></h4>
+    <p>Control register for each bank to select and activate: <code>VRAM_?_CR</code></p>
+    <img src="img/nds/nds-vram_x_cr.svg">
+    <p>The VRAM is divided into 9 banks of different sizes:</p>
+    <table>
+        <tr>
+            <td><code>VRAM_A</code></td>
+            <td>128KiB</td>
+        </tr>
+        <tr>
+            <td><code>VRAM_B</code></td>
+            <td>128KiB</td>
+        </tr>
+        <tr>
+            <td><code>VRAM_C</code></td>
+            <td>128KiB</td>
+        </tr>
+        <tr>
+            <td><code>VRAM_D</code></td>
+            <td>128KiB</td>
+        </tr>
+        <tr>
+            <td><code>VRAM_E</code></td>
+            <td>64KiB</td>
+        </tr>
+        <tr>
+            <td><code>VRAM_F</code></td>
+            <td>16KiB</td>
+        </tr>
+        <tr>
+            <td><code>VRAM_G</code></td>
+            <td>16KiB</td>
+        </tr>
+        <tr>
+            <td><code>VRAM_H</code></td>
+            <td>32KiB</td>
+        </tr>
+        <tr>
+            <td><code>VRAM_I</code></td>
+            <td>16KiB</td>
+        </tr>
+    </table>
+
+    <p>See <a href="#graphics-vram-manag">VRAM Management</a> for more information on how
+    to organise storage in memory of different data.</p>
+
+    <div class="example">
+        <p>Activate bank A and map it to the framebuffer: </p>
+        <pre><code>VRAM_A_CR = VRAM_ENABLE | VRAM_A_LCD;</code></pre>
+        <p>Activate bank A and map it to the main background: </p>
+        <pre><code>VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG;</code></pre>
+        <p>We can also use predefined functions: </p>
+        <pre><code>vramSetBankA(VRAM_A_LCD);</code></pre>
+    </div>
+    <h4><a href="#graphics-graph-engine" id="graphics-graph-engine">Graphical Engine</a></h4>
+    <p>Display register to control the mode and active backgrounds: <code>REG_DISPCNT</code></p>
+    <img src="img/nds/nds-reg_dispcnt.svg">
+    <p>Choosing the configurations for the graphical engine is done according to the existing 
+        <a href="#graphics-modes">screen modes</a> for each engine.</p>
+    <p>Use <code>REG_DISPCNT</code> to choose configurations for the main graphical engine 
+        (the top screen of the NDS) and <code>REG_DISPCNT_SUB</code> to choose the configurations for the secondary graphical engine 
+    (the bottom screen of the NDS).</p>
+    <div class="example">
+        <p>Activate mode 0 and background 1 : </p>
+        <pre><code>REG_DISPCNT = MODE_0_2D | DISPLAY_BG1_ACTIVE;</code></pre>
+    </div>
+    <h4><a href="#graphics-more-config" id="graphics-more-config">Additional Configuration</a></h4>
+    <p>In <strong>Rotoscale</strong> and <strong>Tiled</strong> mode, some additional configurations are required.
+    We will need to configure each active background, initialize palettes if we are using 8 bits mode, 
+    and optionally adjust the affine transformation matrix for each background.</p>
+    <p>Check out the corresponding sections for more information on these configurations.</p>
+
+
+    <h3><a href="#graphics-pixels" id="graphics-pixels">Pixels & Color</a></h3>
+    <p>Each pixel has an RGB (Red-Green-Blue) representation of 16 bits</p>
+    <ul>
+        <li>5 bits for the intensity of each colour (0: none, 31: maximum value)</li>
+        <li>1 bit for transparency (0: pixel is transparent, 1: pixel is opaque)</li>
+    </ul>
+    <p>Some reference colours :</p>
+    <table>
+        <tr>
+          <td>Red</td>
+          <td><code>RGB15(31,0,0)</code></td>
+        </tr>
+        <tr>
+            <td>Green</td>
+            <td><code>RGB15(0,31,0)</code></td>
+        </tr>
+        <tr>
+            <td>Blue</td>
+            <td><code>RGB15(0,0,31)</code></td>
+        </tr>
+        <tr>
+            <td>Yellow</td>
+            <td><code>RGB15(31,31,0)</code></td>
+        </tr>
+        <tr>
+            <td>Black</td>
+            <td><code>RGB15(0,0,0)</code></td>
+        </tr>
+        <tr>
+            <td>White</td>
+            <td><code>RGB15(31,31,31)</code></td>
+        </tr>
+    </table>
+    <div class="example">
+        <p>With transparency bit : </p>
+        <pre><code>static uint16 shape_color = ARGB16(1, 31, 0, 0); </code></pre>
+        <p>Without Transparency bit : </p>
+        <pre><code>static uint16 shape_color = RGB15(31, 0, 0);</code></pre>
+    </div>
+    <h3><a href="#graphics-palettes" id="graphics-palettes">Palettes</a></h3>
+    <p>A palette is a color collection used to reduce index sizes needed to represent pixel colors.
+        Instead of colors being 16 bits per pixel (ARGB16), we use only 8 bits per pixel.
+        To do this, we predefine 256 colors (defined in ARGB16 and stored in a collection), 
+        and then use the index of these colors to set pixel colors. Since we have
+        256 available colors in our defined palette, this means each index is only 8 bits.
+    </p>
+    <p>Palettes are stored in the palette RAM, which stores either one 256 color palette, 
+        or 16 palettes of 16 colors each.</p>
+
+    <p>With 256 colors the color indexes go from 0x00 to 0xFF. When using 16 palettes of
+        16 colors, the first digit (0x0 to 0xF) is the palette and the second (0x0 to 0xF) 
+        is the color.
+    </p>
+
+    <p>Index 0 of a palette represents transparency:
+        a pixel set at this color will display opaque pixels behind it from other backgrounds 
+        if there are any. If there is no opaque pixel behind it, 
+        it will appear as the actual RGB color stored at index 0.</p>
+
+    <img src="img/nds/nds-palette.svg">
+    <div class="example">
+        <p>Initializing a palette : </p>
+        <pre><code>uint 16* myPalette = BG_PALETTE;
+int i;
+for (i=0; i &lt; 32 ; i++) {
+    myPalette[i] = ARGB16(1,0, 0, i);
+}</code></pre>
+    </div>
+    
+    <h3><a href="#graphics-modes" id="graphics-modes">Screen & Modes</a></h3>
+
+    <p>Each of the screens have 49152 pixels: 192 rows of 256 points each.
+        The screen draws pixels sequentially from left to right and up to down (the origin is always top left).</p>
+    <p>Two interrupts occure from the screen drawing :</p>
+    <table>
+        <tr>
+            <td><code>IRQ_HBLANK</code></td>
+            <td>Horizontal blank : after each line is drawn</td>
+        </tr>
+        <tr>
+            <td><code>IRQ_VBLANK</code></td>
+            <td>Vertical blank : after all of the lines are drawn</td>
+        </tr>
+    </table>
+    <p>The bitmap content to draw is changed after a vertical blank,
+        before the start of the next redraw.
+    </p>
+
+
+    <p>Each engine has four backgrounds (or layers): BG0, BG1, BG2 and BG3. 
+    Final view on the screen is their combination based on the graphic mode.
+    </p>
+    <p>Each 2D engine has different sets of four possible modes:</p>
+    <ul>
+        <li>Tiled</li>
+        <li>Rotoscale</li>
+        <li>Extended Rotoscale</li>
+        <li>Framebuffer</li>
+    </ul>
+    <p>There are two 2D engines on the NDS</p>
+    <ul>
+        <li>Main: can display both video memory content or bitmaps of 256 colours. 
+            Also it can use the proprietary 3D graphics engine for backgrounds.</li>
+        <li>Sub: secondary display that can only use the video memory content.</li>
+    </ul>
+    <p>Main engine modes</p>
+    <img class="align-left" src="img/nds/nds-main-screen-modes.svg">
+    <p>Sub engine modes</p>
+    <img class="align-left" src="img/nds/nds-sub-screen-modes.svg">
+
+    <h3><a href="#graphics-backgrounds" id="graphics-backgrounds">Backgrounds</a></h3>
+    <p>Up to four superposed backgrounds can be used at a time, and each
+        one can be used in a different mode. BG0 is the topmost background and BG4 
+        the furthest.
+    </p>
+    <p>The background memory is divided in 32 blocks of 16KB.</p>
+    <img src="img/nds/nds-background-mem.svg">
+
+    <p>To configure the background controller in a <strong>bitmap / framebuffer</strong> mode, 
+        we indicate the slot to use in the dedicated memory for
+        backgrounds using <code>BG_BMP_BASE(x)</code> (or <code>BG_BMP_BASE_SUB(x)</code> for the secondary display) 
+        and indicate background size and format (ex: <code>BgSize_B8_256x256</code> - palette format & 256x256 pixels).
+    </p>
+    <p>
+        To configure the background controller in a <strong>tiled</strong> mode, we specify the tile grid size (ex: <code>BG_32x32</code>), 
+        color amount (ex: <code>BG_COLOR_256</code>),
+        map base (ex: <code>BG_MAP_BASE(x)</code>) and tile base (ex: <code>BG_TILE_BASE(x)</code>).
+    </p>
+
+    <img src="img/nds/nds-background_control.svg">
+
+    <div class="example">
+        <p>Configuring background controller in a bitmap / framebuffer mode: </p>
+        <pre><code>BGCTRL[2] = BG_BMP_BASE(0) | BgSize_B16_256x256;</code></pre>
+        <p>Configuring background controller for secondary display: </p>
+        <pre><code>BGCTRL_SUB[2] = BG_BMP_BASE(0) | BgSize_B8_256x256;</code></pre>
+        <p>Configuring background controller in tiled mode:</p>
+        <pre><code>BGCTRL[0] = BG_32x32 | BG_COLOR_256 | BG_MAP_BASE(0) | BG_TILE_BASE(1);</code></pre>
+    </div>
+
+    <p>Background X can be shifted (scroll) using write-only registers <code>REG_BGXHOFS </code>
+        and <code>REG_BGXVOFS</code> (where X is the number of the background).</p>
+
+
+    <h3><a href="#framebuffer" id="framebuffer">Framebuffer Mode</a></h3>
+    <p>In the Framebuffer mode, the screen is directly mapped to a portion of memory (192 x 256 bitmap).
+        Writing data to this memory directly results in data represented onto the screen.
+    </p>
+    <p>There are four different framebuffers, that are each linked to one of the four 
+        128KiB VRAM banks.
+    </p>
+    <table>
+        <tr>
+            <td><code>FB0</code></td>
+            <td><code>VRAM_A</code></td>
+        </tr>
+        <tr>
+            <td><code>FB1</code></td>
+            <td><code>VRAM_B</code></td>
+        </tr>
+        <tr>
+            <td><code>FB2</code></td>
+            <td><code>VRAM_C</code></td>
+        </tr>
+        <tr>
+            <td><code>FB3</code></td>
+            <td><code>VRAM_D</code></td>
+        </tr>
+    </table>
+    <p>The <a href="#graphics-pixels">pixel format</a> is always <code>RGB15</code> in the framebuffer mode :
+         pixels are always opaque, so the transparency bit is not used.</p>
+    <p>We can also use double buffering : One buffer is being read to write on the screen,
+        while another one is being written in memory, and they are exchanged at the VBLANK interrupt.</p>
+    <div class="example">
+        <p>Configuration when using framebuffer <code>FB0</code></p>
+        <pre><code>REG_DISPCNT = MODE_FB0;
+VRAM_A_CR = VRAM_ENABLE | VRAM_A_LCD; </code></pre>
+    </div>
+
+    <h3><a href="#rotoscale" id="rotoscale">Rotoscale Mode</a></h3>
+    <p>In the rotoscale mode, the memory is not directly mapped onto the screen.
+        We have a couple more functionnalities.
+    </p>
+    <p>The rotoscale mode is called this way because it uses a transformation matrix,
+        which allows us to rotate, scale an displace our original backgrounds.
+    </p>
+    <p>The rotoscale mode also uses palettes: instead of each pixel being 16 bits,
+        we only use 8 bits for each pixel.
+    </p>
+    <p>The configuration for this mode has a couple more steps:
+        on top of the usual Power Manager, VRAM and Graphical Engines configurations,
+        we also need to configure each background, and the palette(s) when using 8 bit mode.
+        We also need to adjust the transformation matrix for each background if we are using one.
+    </p>
+    <h4><a href="#rotoscale-transform" id="rotoscale-transform">Transformation Matrix</a></h4>
+    <p>Rotoscale mode allows us to apply a rotation and scaling operation on the different 
+        backgrounds using a transformation matrix.</p>
+    <p>The transformation matrix is configured using <code>bgTransform</code>.</p>
+    <p>Although the fields are declared as signed integers, they use fixed-point numbers,
+        with 8 bits for decimal part. So to write a number <code>x</code> we must actually use <code>x * 256</code></p>
+
+    <pre><code>typedef struct {
+    s16 hdx;
+    s16 vdx;
+    s16 hdy;
+    s16 vdy;
+    s32 dx;
+    s32 dy;
+} bg_transform;</code></pre>
+
+    <p>For each background, we configure the transformation 
+        matrix like this (n is the nackground number):</p>
+
+    <pre><code>bgTransform[n]->hdx=256;
+bgTransform[n]->vdx= 0;
+bgTransform[n]->hdy= 0;
+bgTransform[n]->vdy= 256;
+bgTransform[n]->dx= 0;
+bgTransform[n]->dy= 0;</code></pre>
+
+    <p>Here are some well know transformations:</p>
+
+    <table>
+        <tr>
+            <td><img height="60px" src="img/nds/transformations/base.svg"></td>
+            <td>Transformation matrix format</td>
+        </tr>
+        <tr>
+            <td><img height="60px" src="img/nds/transformations/identity.svg"></td>
+            <td>Identity</td>
+        </tr>
+        <tr>
+            <td><img height="60px" src="img/nds/transformations/vert-mirror.svg"></td>
+            <td>Vertical Mirror</td>
+        </tr>
+        <tr>
+            <td><img height="60px" src="img/nds/transformations/hor-mirror.svg"></td>
+            <td>Horizontal Mirror</td>
+        </tr>
+        <tr>
+            <td><img height="60px" src="img/nds/transformations/vert-hor-mirror.svg"></td>
+            <td>Vertical & Horizontal Mirror</td>
+        </tr>
+        <tr>
+            <td><img height="60px" src="img/nds/transformations/vert-shrink.svg"></td>
+            <td>Vertical Shrink (divide height by 2)</td>
+        </tr>
+        <tr>
+            <td><img height="60px" src="img/nds/transformations/hor-shrink.svg"></td>
+            <td>Horizontal Shrink (divide width by 2)</td>
+        </tr>
+        <tr>
+            <td><img height="60px" src="img/nds/transformations/rot-clockwise-y.svg"></td>
+            <td>Clockwise Rotation by y (in radians)</td>
+        </tr>
+    </table>
+
+    <div class="note">
+        <p><code>hdx</code> and <code>vdx</code> were previously
+        <code>xdx</code> and <code>ydx</code>. Be careful which one you use, 
+        depending on your version of LibNDS.</p>
+    </div>
+
+    <h3><a href="#tiled" id="tiled">Tiled Mode</a></h3>
+    <p>In the tiled mode, the backgrounds are composed of smaller blocks.
+        The minimum unit used to create tiled backgrounds are called tiles (or text),
+        and are blocks of 8x8 pixels.
+    </p>
+
+    <p>Backgrounds are maps of tiles : they reference tiles using their index. 
+        The tile collection can contain up to 1024 tiles, meaning their index is 10 bits.
+    </p>
+
+    <p>Palettes are also used for pixels in tiled mode. Either one 256 color palette or
+        16 palettes of 16 colors are used. 
+    </p>
+    
+    <h4><a href="#tiled-tiles" id="tiled-tiles">Tiles</a></h4>
+    <p>Tiles are essentially 8x8 matrix of color indexes from a palette. 
+        These color indexes are either 8 bits (256 color palette) or 4 bits (16 color palette).</p>
+
+    <p>Tiles are stored from the base address <code>BG_TILE_RAM(x)</code>.
+        Tile base addresses are multiples of 16KiB and the maximum size is 256KiB.</p>
+
+    <p>We use <code>BG_TILE_BASE(x)</code> to configure the background control register and
+    <code>BG_TILE_RAM(x)</code> (or <code>BG_TILE_RAM_SUB(x)</code>) to access the tile set or modify it.</p>
+    
+    <p><code>x</code> goes from 0 to 15 (there are 16 base addresses for tiles).
+    This is due to the fact that 4 bits are used to store tile base displacement in the
+    background control register.</p>
+
+    <img class="medium" src="img/nds/nds-tiles_ram.svg">
+
+    <h4><a href="#tiled-maps" id="tiled-maps">Maps</a></h4>
+    <p>A map of tiles can be larger than the screen, and the visible area
+        can then be adjusted with a scroll effect. 
+        The screen has size 32x34 tiles (256x192 pixels).
+    </p>
+
+    <p>There are four possible map sizes on the NDS:</p>
+
+    <div style="display:flex; gap:.8em; align-items: start; flex-wrap: wrap;">
+    <img class="align-left" width=80px src="img/nds/map-sizes/nds-map-size-32x32.svg">
+    <img class="align-left" width=80px src="img/nds/map-sizes/nds-map-size-32x64.svg">
+    <img class="align-left" width=160px src="img/nds/map-sizes/nds-map-size-64x32.svg">
+    <img class="align-left" width=160px src="img/nds/map-sizes/nds-map-size-64x64.svg">
+    </div>
+
+    <p>Each tile in a map is represented with 16 bits:</p>
+
+    <img src="img/nds/nds-map_control.svg">
+
+    <p>The palette is specified if 16 palettes of 16 colors are used. 
+        This way tiles can use 4 bit colors.</p>
+
+    <p>To set the tiles data in map we can use <code>TILE_PALETTE</code> for the palette,
+    and <code>TILE_FLIP_H</code> and <code>TILE_FLIP_V</code> for the flip bits.</p>
+
+    <p>Maps are stored from the base address <code>BG_MAP_RAM(x)</code>.
+        Map base addresses are multiples of 2KiB and the maximum size is 64KiB.
+        The most used size of map is 32x32 tiles, which is exactly 2KiB
+        (2B per tile), but other map sizes may use up more than one slot in RAM.
+    </p>
+
+    <p>We use <code>BG_MAP_BASE(x)</code> to configure the background control register and
+    <code>BG_MAP_RAM(x)</code> (or <code>BG_MAP_RAM_SUB(x)</code>) to access the tile set or modify it.</p>
+
+    <p><code>x</code> goes from 0 to 31 (there are 32 base addresses for maps).
+        This is due to the fact that 5 bits are used to store tile base displacement in the
+        background control register.</p>
+
+    <img src="img/nds/nds-map_ram.svg">
+
+    <h3><a href="#graphics-sprites" id="graphics-sprites">Sprites</a></h3>
+
+    <p>Sprites are small graphic objects that can be rendered on top of the 
+        backgrounds and provide extended features.</p>
+
+    <p>Different sizes are possible (8x8, 16x16, 32x32, 64x64, 
+        16x8, 32x8, 32x16, 64x32, 8x32, 16x32).</p>
+    <p>They can be rendered in any position, on or outside of the screen.
+        They can be rotated, scaled or flipped, and can be made in different modes
+        (bitmap, tiled...).
+    </p>
+    <p>The amount of sprites is fixed to 128 and they are hidden by default.</p>
+    <p>A special mode has to be configured in a VRAM mode: 
+        this bank cannot be used for anything else (e.g.: for backgrounds).
+        A sprite is associated to a graphic stored in memory and several 
+        sprites can be associated to the same graphic
+        (we can have several sprites with a single graphic loaded in memory).
+        They use a special palette (different from the one used for backgrounds) 
+        and can use extended palettes</p>
+
+    <div class="example">
+    <p>Sprite Configuration:</p>
+    <pre><code class="language-c">VRAM_B_CR = VRAM_ENABLE | VRAM_B_MAIN_SPRITE;
+
+// Initialize sprite manager and the engine
+oamInit(&oamMain, SpriteMapping_1D_32, false);
+
+// Allocate space for the graphic to show in the sprite
+gfx = oamAllocateGfx(&oamMain, SpriteSize_32x32, SpriteColorFormat_256Color);
+
+// Copy data for th graphic
+swiCopy(imagePal, SPRITE_PALETTE, imagePalLen / 2);
+swiCopy(imageTiles, gfx, imageTilesLen);
+ </code></pre>
+    <p>Simple Sprite Usage:</p>
+    <pre><code>//Position
+int x = 0, y = 0, keys;
+
+while (1) {
+    //Read held keys
+    scanKeys() ;
+    keys = keysHeld();
+    
+    //Modify position of the sprite accordingly
+    if((keys & KEY_RIGHT) && 
+        (x &lt; (SCREEN_WIDTH - SPRITE_WIDTH))) 
+        x+=2
+    if((keys & KEF DOWN) && 
+        (y &lt; (SCREEN HEIGHT - SPRITE_HEIGHT))) 
+        y+=2;
+    if((keys & KEF LEFT) && (x > 0)) 
+        x-=2;
+    if((keys & KEF UP) && (y > 0)) 
+        y-=2;
+    
+    oamSet (&oaMain ,      // oam handler
+        0,                 // Number of sprite
+        x, y,              // Coordinates (top left)
+        0,                 // Priority
+        0,                 // Palette to use
+        SpriteSize 32x32,           // Sprite size
+        SpriteColorFormat_256Color, // Color format
+        gfx,          // Loaded graphic to display
+        -1,           // Affine rotation (-1 none)
+        false,        // Double size if rotating
+        false,        // Hide this sprite
+        false, false, // Horizontal or vertical flip
+        false);       // Mosaic      
+    swiWaitForVBlank();
+    
+    //Update the sprites
+    oamUpdate(&oamMain);}
+</code></pre>
+    </div>
+
+    <h3><a href="#graphics-grit" id="graphics-grit">Grit</a></h3>
+    <p>Grit (GBA Raster Image Transmogrifier) is a tool that transforms images
+        from PNG format into an NDS readable format.
+    </p>
+    <p>It generates assembly code and a C header file (declaration of palettes, maps and graphic data).</p>
+    <p>Conversion is automated using a few rules included in the Makefile of 
+        the project and a configuration file (extension .grit).
+        The configuration file simply contains some parameter flags. It must have the same name as the image.
+    </p>
+    <ul>
+        <li>Place image to transform (“myImage.png”) and configuration file ( “myImage.grit”) in the project folder data</li>
+        <li>During the compilation process, grit will be called and the output files will be placed automatically in the temporary building folder build</li>
+    </ul>
+
+    The grit configuration file may contain the following parameters :
+    <table>
+        <tr>
+            <td>-g | -g!</td>
+            <td>Include or do not include graphic data</td>
+            <td>Always Include!</td>
+        </tr>
+        <tr>
+            <td>-gb | -gt</td>
+            <td>Generate Bitmap or Tiles</td>
+            <td>Depends on Mode</td>
+        </tr>
+        <tr>
+            <td>-p | -p!</td>
+            <td>Include or do not include the palette</td>
+            <td>Usually Generate</td>
+        </tr>
+        <tr>
+            <td>-m | -m!</td>
+            <td>Include or do not include the map</td>
+            <td>For Tiled Mode</td>
+        </tr>
+        <tr>
+            <td>-pnX</td>
+            <td>Restrict the palette size to X colors</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>-gBX</td>
+            <td>Sets the pixel size to X bits</td>
+            <td>X = 8 or 16</td>
+        </tr>
+        <tr>
+            <td>-gTC</td>
+            <td>Sets the color C to transparent</td>
+            <td>C = hex</td>
+        </tr>
+    </table>
+    <p>Grit can be used from the terminal like this : 
+        <pre><code>grit myImage.png -g -gB16</code></pre></p>
+    <p>For more parameters use <code>grit --help</code>.</p>
+
+    <div class="note">
+        <p>For tiles, image sizes must be multiples of 8.</p>
+        <p>Color (for setting transparency color) should be a 16bit BGR color or 24bit RGB color in hex.</p>
+    </div>
+
+    <h3><a href="#graphics-vram-manag" id="graphics-vram-manag">VRAM Management</a></h3>
+
+    <p>Many different types of data may be stored in VRAM, like palettes, maps, tiles...
+        Because all of these are stored in the same memory spaces we must be careful to avoid
+        overlaps, or we may accidentally overwrite some parts of memory and loose data.
+    </p>
+
+    <p>To do this we must take into consideration base addresses as well as storage size.
+        For example <code>BG_TILE_BASE</code> and <code>BG_MAP_BASE</code> may overlap : 
+        both begin at the same place in memory. This is something we must take into account
+        when assigning our slots.
+    </p>
+
+    <p>Note that the VRAM banks reside in the background memory starting from 0x6000000.
+        If you use the macro VRAM_x_MAIN_BG when activating VRAM_x, then all the 
+        VRAM banks will be continuous starting from VRAM_A at 0x6000000.</p>
+
+    <p>Each type of data has a fixed assignment in VRAM banks:</p>
+
+    <img src="img/nds/nds-vram-assignments.svg">
+
+    <p>The base indexes we use to place each type of data in VRAM overlap like this:</p>
+
+    <img class="align-left" src="img/nds/nds-vram_collis.svg">
+
+    <p>Some things to keep in mind:</p>
+    <ul>
+        <li>64x64 maps take up 4 map slots. They are not stored linearly but by quadrant:
+            each of the 4 used map bases contain a quarter of the total map.
+        </li>
+    </ul>
+
+    <h3><a href="#graphics-data-trans" id="graphics-data-trans">Data Transfer</a></h3>
+
+    <p>There are mutliple ways to transfer data between the CPU and I/O subsystems.</p>
+
+    <p><strong>MemCopy</strong></p>
+
+    <pre><code>void *memcpy(void *dest, const void * src, size_t n)</code></pre>
+
+    <table>
+        <tr>
+            <td>dest</td>
+            <td>Pointer to the destination array where the content is to be copied,<br> type-casted to a pointer of type void*.</td>
+        </tr>
+        <tr>
+            <td>src</td>
+            <td>Pointer to the source of data to be copied, <br>type-casted to a pointer of type void*.</td>
+        </tr>
+        <tr>
+            <td>n</td>
+            <td>Number of bytes to be copied.</td>
+        </tr>
+    </table>
+
+    <p><strong>SwiCopy</strong></p>
+
+    <pre><code>void swiCopy(const void *src, void *dest, int flags)</code></pre>
+
+    <table>
+        <tr>
+            <td>dest</td>
+            <td>Pointer to the destination array where the content is to be copied, <br>type-casted to a pointer of type void*.</td>
+        </tr>
+        <tr>
+            <td>src</td>
+            <td>Pointer to the source of data to be copied, <br>type-casted to a pointer of type void*.</td>
+        </tr>
+        <tr>
+            <td>flags</td>
+            <td>Bits(0-20): size of data to copy/fill in words, or'd with the copy <br>mode size (word or halfword) and type (copy or fill).</td>
+        </tr>
+    </table>
+
+    <div class="note">
+        <p>You can use <code>swiCopy</code> as you would memCopy, only dividing n by 2 to obtain flags 
+        (<code>swiCopy</code> copies half words instead of bytes)</p>
+    </div>
+
+    <p><strong>DMACopy</strong></p>
+
+    <pre><code>void dmaCopy(const void *src, void *dest, uint32 size)</code></pre>
+
+    <table>
+        <tr>
+            <td>dest</td>
+            <td>Pointer to the destination array where the content is to be copied,<br> type-casted to a pointer of type void*.</td>
+        </tr>
+        <tr>
+            <td>src</td>
+            <td>Pointer to the source of data to be copied,<br> type-casted to a pointer of type void*.</td>
+        </tr>
+        <tr>
+            <td>n</td>
+            <td>Number of bytes to be copied <br>(will be truncated to the nearest half word).</td>
+        </tr>
+    </table>
+
+    <p><code>dmaCopy</code> uses Direct Memory Access to copy data. Using DMA is 
+        generally faster and more efficient than CPU copies (<code>memcpy</code>, <code>swiCopy</code>) 
+        because it offloads the task of data transfer to a dedicated 
+        hardware component, allowing the CPU to perform other tasks.</p>
+
+    <p><code>BG_GFX</code> is simply a u16 pointer to the address 0x6000000, 
+        very useful for copying the bitmaps. This address is the start of VRAM.</p>
+
+    <div class="warning">
+        <p><code>BG_BMP_RAM</code> and other similar pointers
+        are often u16 pointers! Make sure to take this into account
+        when incrementing your pointers.</p>
+        <p>For example:</p>
+        <pre><code>dmaCopy(RedTile, BG_TILE_RAM_SUB(1), 64);
+dmaCopy(BlueTile, BG_TILE_RAM(1) + 32, 64);
+dmaCopy(GreenTile, BG_TILE_RAM(1) + 32*2, 64);</code></pre>
+        <p>Tiles are 64 bytes here but we only increment by 32 each time
+            because our pointer is u16 (one increment is 2 bytes).
+        </p>
+        <p>You can also cast your pointer to a u8 or void pointer instead.</p>
+    </div>
+
+    <h2><a href="#controls" id="controls">Controls</a></h2>
+    <p>Controls are handled on either the ARM9 or ARM7 CPU, depending on the button.</p>
+
+    <img src="img/nds/nds-controls-periphs.svg">
+
+    <p>Two methods exist to use the I/O:</p>
+
+    <p><strong>Polling:</strong> programmed I/O with active waiting, using LibNDS methods</p>
+
+    <p>Controls linked to ARM7 can only be used with polling (touchscreen, X and Y Keys)
+        and not with interrupts.
+    </p>
+
+    <p><code>void scanKeys()</code> : scans and stores pressed keys</p>
+    
+    <p><code>uint32 keysHeld()</code> : returns keys pressed and held</p>
+    
+    <p><code>uint32 keysDown()</code> : returns keys just pressed</p>
+    
+    <p><code>uint32 keysUp()</code> : returns keys just released</p>
+
+    <p><code>void touchRead(touchPosition* pos)</code> : where was the touch screen pressed?</p>
+    
+    <p><strong>I/O interrupts:</strong> directly managing the <code>REG_KEYCNT</code> register
+        (setup interrupts using bits manipulation of the register using C code)</p>
+
+    <p>Whether a key is currently pressed is stored in the <code>REG_KEYINPUT</code> register 
+        for the ARM9 and the <code>REG_KEYXY</code> register for the ARM7. 
+        <strong>A 0 means the key is pressed, not a 1.</strong></p>
+    
+    <p>Control interrupts are configured in the <code>REG_KEYCNT</code> register. 
+        The lower 14 bits control which bits can trigger interrupts. These also 
+        correspond to the bits in <code>REG_KEYINPUT</code> and <code>REG_KEYXY</code>.</p>
+
+    <table>
+        <tr>
+            <th>Bit</th>
+            <th>LibNDS Name</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>KEY_A</td>
+            <td>The A button</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>KEY_B</td>
+            <td>The B button</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>KEY_SELECT</td>
+            <td>The Select button</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>KEY_START</td>
+            <td>The Start button</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>KEY_RIGHT</td>
+            <td>Right arrow D-Pad</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>KEY_LEFT</td>
+            <td>Left arrow D-Pad</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>KEY_UP</td>
+            <td>Up arrow D-Pad</td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>KEY_DOWN</td>
+            <td>Down arrow D-Pad</td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>KEY_R</td>
+            <td>Right shoulder button</td>
+        </tr>
+        <tr>
+            <td>9</td>
+            <td>KEY_L</td>
+            <td>Left shoulder button</td>
+        </tr>
+        <tr>
+            <td>10</td>
+            <td>KEY_X</td>
+            <td>The X button</td>
+        </tr>
+        <tr>
+            <td>11</td>
+            <td>KEY_Y</td>
+            <td>The Y button</td>
+        </tr>
+        <tr>
+            <td>12</td>
+            <td>KEY_TOUCH</td>
+            <td>Touchscreen pressed</td>
+        </tr>
+        <tr>
+            <td>13</td>
+            <td>KEY_LID</td>
+            <td>Lid closed</td>
+        </tr>
+    </table>
+
+    <p>In the <code>REG_KEYCNT</code> register, bit 14 enables 
+        the key button interrupt (i.e. when any button whose 
+        <code>KEYCNT</code> bit is set is pressed, it triggers 
+        an interrupt). Bit 15 makes it so all buttons whose 
+        <code>KEYCNT</code> bits are set need to be pressed 
+        at the same time to trigger an interrupt.</p>
+
+    <p>To read where the touchscreen is pressed, call <code>touchRead(touchPosition* pos)</code> 
+        to write into <code>pos</code> the touchscreen data. <code>touchPosition</code> is defined:</p>
+    
+    <pre><code>typedef struct {
+    u16 rawx; // Raw x value
+    u16 rawy; // Raw y value
+    u16 px; // Pixel X value
+    u16 py; // Pixel Y value
+    u16 z1; // Raw cross panel resistance
+    u16 z2; // Raw cross panel resistance
+}</code></pre>
+
+    <div class="note">
+        <p>To draw onto the bottom screen, we need the framebuffer mode, 
+            which is only possible on the main 2D engine. To make the 
+            bottom screen use the main 2D engine, flip bit 15 in the 
+            <code>REG_POWERCNT</code> register.
+        </p>
+    </div>
+
+    <!--<h2><a href="#sound" id="sound">Sound</a></h2>
+    <img src="img/nds/nds-audio-map.svg">-->
+    
+    </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js" integrity="sha512-rdhY3cbXURo13l/WU9VlaRyaIYeJ/KBakckXIvJNAQde8DgpOmE+eZf7ha4vdqVjTtwQt69bD2wH2LXob/LB7Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/scala.min.js" integrity="sha512-F7HBSjTYDsAreqced8cggvF5AuB+j2TXktnLYpCrpWF2fhQJJCc5KimR3LYLs0AppTBecbPN9M9Hjf8yC2WstA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <script src="scripts.js"></script>
+
+</body>
+    
+</html>

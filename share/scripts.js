@@ -26,6 +26,9 @@ function highlight() {
 	document.querySelectorAll('pre code.language-mips').forEach((el) => {
 		hljs.highlightElement(el, {languages: ['mipsasm']});
 	});
+	document.querySelectorAll('pre code.language-c').forEach((el) => {
+		hljs.highlightElement(el, {languages: ['c']});
+	});
 }
 
 function renderTex() {
