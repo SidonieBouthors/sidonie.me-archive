@@ -346,6 +346,7 @@ int main(void) {
     }
     if (keys & KEY_DOWN) {
         frequency /= 2;
+        if (frequency == 0) { frequency = 1; }
     }
     TIMER0_DATA = TIMER_FREQ_64(frequency);
 
@@ -354,7 +355,7 @@ int main(void) {
     touchRead(pos);
 
     // 5. If touched, set the new color
-    if (pos->px > 0 && pos->py > 0) {
+    if (pos->px > 0 || pos->py > 0) {
         current_color = (current_color + 1) % 3;
     }
 

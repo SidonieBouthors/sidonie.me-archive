@@ -424,8 +424,17 @@ VRAM_A_CR = VRAM_ENABLE | VRAM_A_LCD; </code></pre>
     <p>The configuration for this mode has a couple more steps:
         on top of the usual Power Manager, VRAM and Graphical Engines configurations,
         we also need to configure each background, and the palette(s) when using 8 bit mode.
-        We also need to adjust the transformation matrix for each background if we are using one.
+        We also need to adjust the transformation matrix for each background if we are using
+        extended rotoscale.
     </p>
+
+    <div class="note">
+        <p>Use extended rotoscale rather than rotoscale by default. 
+            Don't forget to set the transformation matrix to be identity if you
+            don't want to use the rotation, as it still needs to be defined.
+        </p>
+    </div>
+
     <h4><a href="#rotoscale-transform" id="rotoscale-transform">Transformation Matrix</a></h4>
     <p>Rotoscale mode allows us to apply a rotation and scaling operation on the different 
         backgrounds using a transformation matrix.</p>
@@ -960,9 +969,81 @@ dmaCopy(GreenTile, BG_TILE_RAM(1) + 32*2, 64);</code></pre>
         </p>
     </div>
 
-    <!--<h2><a href="#sound" id="sound">Sound</a></h2>
-    <img src="img/nds/nds-audio-map.svg">-->
+    <h2><a href="#sound" id="sound">Sound</a></h2>
+    <img src="img/nds/nds-audio-map.svg">
+    <p>Power on the sound system :</p>
+    <pre><code>powerON(POWER_SOUND);</code></pre>
+    <p>Set the sound configurations :</p>
+    <pre><code>SOUND_CR= SOUND_ENABLE | SOUND_VOL(0x7F);</code></pre>
+    <p>The volume goes from <code>0x00</code> (silent) to <code>0x7F</code> (full).</p>
+
+    <p>Each channel can then be configured independently through <code>SCHANNEL_CR(n)</code>,
+    and additional properties can be configured using <code>SCHANNEL_property(n)</code>.</p>
+
+    <div class="example">
+        <pre><code class="language-c">SCHANNEL_CR(0) = SCHANNEL_ENABLE | SOUND_ONE_SHOT 
+                 | SOUND_8BIT;
+
+SCHANNEL_TIMER(0) = SOUND_FREQ(11127);
+SCHANNEL_SOURCE(0) = (uint32)sound1;
+SCHANNEL_LENGTH(0) = ((int)sound1_end - 
+                      (int)sound) >> 2;</code></pre>
+    </div>
+
+    <p>We use the <a href="https://maxmod.org/" target="_blank">MaxMod API</a> to deal with sound.
+    We can use two types of sound: module files (.mod, .s3m, .it or .xm) for background 
+    music, and sound effects (.wav) to be played on demand. 
+    <br>Sound effects can also be a module sound played only once
+    instead of looping,  but this is not recommended. 
+    Wav file generate large binaries,
+    so they must be used sparingly.</p>
+
+    <p>Some useful ressources :</p>
+    <ul>
+        <li><a href="https://modarchive.org/index.php" target="_blank">The Mod Archive</a> (music modules)</li>
+        <li><a href="https://www.wavsource.com/sfx/sfx.htm" target="_blank">WavSource</a> (wav sounds)</li>
+    </ul>
+
+    <p><br></p>
+
+    <p><strong>Initializing the library pointers to sounds and internal buffers :</strong></p>
+    <pre><code class="language-c">void mmInitDefaultMem(mm_addr soundbank);</code></pre>
+    <p>The input parameter is the name of the sound-bank binary object
+        (by default it is <code>soundbank_bin</code>).</p>
+
+    <p><strong>Load music modules :</strong></p>
+    <pre><code class="language-c">void mmLoad(mm_word module_ID);</code></pre>
+    <p>The input parameter is the 32-bit index with the module identifier
+        (by default all identifiers are defined in <code>soundbank.h</code>).</p>
+
+    <p><strong>Load sound effect :</strong></p>
+    <pre><code class="language-c">void mmLoadEffect(mm_word sample_ID);</code></pre>
+    <p>The input parameter is the 32-bit sample index with the effect identifier
+        (by default all identifiers are defined in <code>soundbank.</code>h).</p>
+
+    <p><strong>Play music :</strong></p>
+    <pre><code class="language-c">void mmStart(mm_word module_ID, mm_pmode mode);</code></pre>
+    <p>The first input parameter is the module identifier.
+        The second parameter specifies whether the music has to be played
+        once (<code>MM_PLAY_ONCE</code>) or in an infinite loop (<code>MM_PLAY_LOOP</code>)</p>
+
+    <p><strong>Pause, resume or stop music :</strong></p>
+    <pre><code class="language-c">void mmPause();
+void mmResume();
+void mmStop();</code></pre>
+
+    <p><strong>Play sound effect :</strong></p>
+    <pre><code class="language-c">mm_sfxhand mmEffect(mm_word sample_ID);</code></pre>
+    <p>The input parameter specifies sound effect identifier of effect to play.
+        The effect will be played without modifying the sound configuration.</p>
     
+    <p><strong>Play sound effect with specific sound configuration :</strong></p>
+    <pre><code class="language-c">mm_sfxhand mmEffectEx(mm_sound_effect* sound);</code></pre>
+    <p>The input parameter is a structure
+        with the effect identifier (id) and
+        three main parameters: Volume, Panning, and Rate (frequency).</p>
+    
+
     </main>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js" integrity="sha512-rdhY3cbXURo13l/WU9VlaRyaIYeJ/KBakckXIvJNAQde8DgpOmE+eZf7ha4vdqVjTtwQt69bD2wH2LXob/LB7Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
